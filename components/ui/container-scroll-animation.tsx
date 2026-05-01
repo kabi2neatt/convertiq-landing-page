@@ -9,7 +9,13 @@ import {
   useTransform,
 } from "framer-motion";
 
-export const ContainerScroll = ({ children }: { children: React.ReactNode }) => {
+type ContainerScrollProps = {
+  children:
+    | React.ReactNode
+    | ((progress: MotionValue<number>) => React.ReactNode);
+};
+
+export const ContainerScroll = ({ children }: ContainerScrollProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const progress = useMotionValue(0);
 
@@ -96,7 +102,7 @@ export const ContainerScroll = ({ children }: { children: React.ReactNode }) => 
             frameHeight={frameHeight}
             glowOpacity={glowOpacity}
           >
-            {children}
+            {typeof children === "function" ? children(smoothProgress) : children}
           </Card>
         </div>
       </div>
