@@ -23,7 +23,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-<<<<<<< HEAD
 import { useLockedSectionProgress } from "@/components/useLockedSectionProgress";
 
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
