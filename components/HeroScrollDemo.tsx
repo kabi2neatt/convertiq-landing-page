@@ -195,14 +195,32 @@ function HeroContent({
   const mobileNavOpacity = useTransform(progress, [0, 0.08, 1], [1, 1, 0.96]);
   const mobileNavY = useTransform(progress, [0, 1], [0, -2]);
 
-  const contentY = useTransform(progress, [0, 0.35, 0.7, 1], [0, -85, -160, -220]);
-  const contentScale = useTransform(progress, [0, 0.45, 1], [1, 0.92, 0.82]);
+const contentY = useTransform(
+  progress,
+  [0, 0.35, 0.7, 1],
+  isMobile ? [0, -85, -160, -220] : [0, 0, 0, 0]
+);
+
+const contentScale = useTransform(
+  progress,
+  [0, 0.45, 1],
+  isMobile ? [1, 0.92, 0.82] : [1, 1, 1]
+);
 
   const badgeOpacity = useTransform(progress, [0, 0.25], [1, 0.1]);
   const badgeY = useTransform(progress, [0, 0.25], [0, -24]);
 
-  const headlineY = useTransform(progress, [0, 0.5, 1], [0, -20, -50]);
-  const headlineScale = useTransform(progress, [0, 0.5, 1], [1, 0.96, 0.9]);
+ const headlineY = useTransform(
+  progress,
+  [0, 0.5, 1],
+  isMobile ? [0, -20, -50] : [0, 0, 0]
+);
+
+const headlineScale = useTransform(
+  progress,
+  [0, 0.5, 1],
+  isMobile ? [1, 0.96, 0.9] : [1, 1, 1]
+);
   const headlineOpacity = useTransform(progress, [0, 1], [1, 0.95]);
 
   const subOpacity = useTransform(progress, [0.12, 0.3, 0.72], [0, 1, 0.15]);
