@@ -207,7 +207,11 @@ const contentScale = useTransform(
   isMobile ? [1, 0.92, 0.82] : [1, 1, 1]
 );
 
-  const badgeOpacity = useTransform(progress, [0, 0.25], [1, 0.1]);
+  const badgeOpacity = useTransform(
+    progress,
+    [0, 0.25],
+    isMobile ? [1, 0.1] : [1, 1]
+  );
   const badgeY = useTransform(progress, [0, 0.25], [0, -24]);
 
  const headlineY = useTransform(
@@ -221,22 +225,42 @@ const headlineScale = useTransform(
   [0, 0.5, 1],
   isMobile ? [1, 0.96, 0.9] : [1, 1, 1]
 );
-  const headlineOpacity = useTransform(progress, [0, 1], [1, 0.95]);
+  const headlineOpacity = useTransform(
+    progress,
+    [0, 1],
+    isMobile ? [1, 0.95] : [1, 1]
+  );
 
-  const subOpacity = useTransform(progress, [0.12, 0.3, 0.72], [0, 1, 0.15]);
+  const subOpacity = useTransform(
+    progress,
+    [0.12, 0.3, 0.72],
+    isMobile ? [0, 1, 0.15] : [1, 1, 1]
+  );
   const subY = useTransform(progress, [0.12, 0.3], [26, 0]);
 
-  const ctaOpacity = useTransform(progress, [0.28, 0.48, 0.82], [0, 1, 0.2]);
+  const ctaOpacity = useTransform(
+    progress,
+    [0.28, 0.48, 0.82],
+    isMobile ? [0, 1, 0.2] : [1, 1, 1]
+  );
   const ctaY = useTransform(progress, [0.28, 0.48], [30, 0]);
 
-  const trustOpacity = useTransform(progress, [0.5, 0.68, 0.9], [0, 1, 0.1]);
+  const trustOpacity = useTransform(
+    progress,
+    [0.5, 0.68, 0.9],
+    isMobile ? [0, 1, 0.1] : [1, 1, 1]
+  );
   const trustY = useTransform(progress, [0.5, 0.68], [24, 0]);
 
   const systemCardOpacity = useTransform(progress, [0.62, 0.82], [0, 1]);
   const systemCardY = useTransform(progress, [0.62, 0.82], [70, 0]);
   const systemCardScale = useTransform(progress, [0.62, 0.82], [0.9, 1]);
 
-  const logoOpacity = useTransform(progress, [0.82, 1], [0, 1]);
+  const logoOpacity = useTransform(
+    progress,
+    [0.82, 1],
+    isMobile ? [0, 1] : [1, 1]
+  );
   const logoY = useTransform(progress, [0.82, 1], [40, 0]);
 
   return (
@@ -261,7 +285,7 @@ const headlineScale = useTransform(
           playsInline
         />
 
-        <div className="absolute inset-0 bg-black/38 md:bg-black/55" />
+        <div className="absolute inset-0 bg-black/28 md:bg-black/35" />
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.08),rgba(0,0,0,0.62)_48%,rgba(0,0,0,0.9))]" />
 
         <motion.div
