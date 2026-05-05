@@ -33,7 +33,7 @@ export function Footer() {
               transition={{ duration: 3.2, repeat: Infinity }}
             />
             <Image
-              src="/Convertiqmedia.png"
+              src="/convertiqmedia.png"
               alt="ConvertIQ Media"
               width={180}
               height={180}
