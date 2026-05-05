@@ -153,28 +153,22 @@ function MagneticCTA({
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   HERO SCROLL — everything (badge, headline, subheadline, video placeholder,
-   CTA, trust line) lives INSIDE the ContainerScroll frame, with each piece
-   tied to the frame's scroll progress. Mirrors HeroScrollDemo.
+   HERO SCROLL
    ───────────────────────────────────────────────────────────────────────── */
 function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
 
-
-  // Background motion inside the hero frame
   const bgScale = useTransform(progress, [0, 1], [1.04, 1.14]);
   const bgY = useTransform(progress, [0, 1], [12, -30]);
 
-  // Keep the headline visible immediately, then subtly lift it as the video arrives.
   const headlineY = useTransform(progress, [0, 0.18, 0.72], [20, 0, -6]);
   const headlineScale = useTransform(progress, [0, 0.2, 0.72], [0.96, 1, 0.98]);
 
   const subOpacity = useTransform(progress, [0.05, 0.2], [0, 1]);
   const subY = useTransform(progress, [0.05, 0.2], [18, 0]);
 
-  // Video appears early so visitors immediately know there is something to watch.
   const videoOpacity = useTransform(progress, [0.12, 0.28], [0, 1]);
   const videoY = useTransform(progress, [0.12, 0.28], [42, 0]);
   const videoScale = useTransform(progress, [0.12, 0.32, 0.88], [0.84, 1, 1.04]);
@@ -184,22 +178,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
 
   const ctaOpacity = useTransform(progress, [0.62, 0.78], [0, 1]);
   const ctaY = useTransform(progress, [0.62, 0.78], [24, 0]);
-=======
-  // Background-image / dim layer parallaxes inside the frame
-  const bgScale = useTransform(progress, [0, 1], [1.06, 1.16]);
-  const bgY = useTransform(progress, [0, 1], [20, -35]);
-
-  // Each piece reveals in sequence, just like HeroScrollDemo
-  const subOpacity = useTransform(progress, [0.15, 0.35], [0, 1]);
-  const subY = useTransform(progress, [0.15, 0.35], [22, 0]);
-
-  const videoOpacity = useTransform(progress, [0.3, 0.55], [0, 1]);
-  const videoY = useTransform(progress, [0.3, 0.55], [40, 0]);
-  const videoScale = useTransform(progress, [0.3, 0.6], [0.9, 1]);
-
-  const ctaOpacity = useTransform(progress, [0.55, 0.75], [0, 1]);
-  const ctaY = useTransform(progress, [0.55, 0.75], [24, 0]);
->>>>>>> f71fc9d (updated CaseStudy)
 
   const trustOpacity = useTransform(progress, [0.78, 1], [0, 1]);
   const trustY = useTransform(progress, [0.78, 1], [18, 0]);
@@ -220,14 +198,13 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
-  
+
     v.muted = !v.muted;
     setIsMuted(v.muted);
   };
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-2xl">
-
       <motion.div
         style={{ y: bgY, scale: bgScale }}
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_24%_24%,rgba(124,58,237,0.4),transparent_48%),radial-gradient(circle_at_72%_78%,rgba(37,99,235,0.33),transparent_52%),linear-gradient(180deg,#0a0a12_0%,#05050a_100%)]"
@@ -281,53 +258,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
           />
 
           <div className="relative overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-2xl">
-=======
-      {/* Ambient background gradient inside the frame */}
-      <motion.div
-        style={{ y: bgY, scale: bgScale }}
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(124,58,237,0.35),transparent_55%),radial-gradient(circle_at_70%_85%,rgba(37,99,235,0.3),transparent_55%),linear-gradient(180deg,#0a0a0f_0%,#05050a_100%)]"
-      />
-
-      {/* Subtle vignette */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.0),rgba(0,0,0,0.55))]" />
-
-      {/* Content stack */}
-      <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 py-6 text-center md:px-8 md:py-10">
-        {/* Eyebrow badge */}
-        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-purple-400/30 bg-purple-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-purple-100 backdrop-blur md:mb-5 md:px-4 md:py-1.5 md:text-xs">
-          <Sparkles size={12} className="text-purple-300" />
-          Free Training
-        </div>
-
-        {/* Headline */}
-        <h1 className="max-w-5xl text-[1.85rem] font-black leading-[0.94] tracking-[-0.065em] text-white min-[390px]:text-[2.05rem] md:text-5xl md:leading-[0.95] lg:text-6xl">
-          Watch how we generate <br className="hidden md:block" />
-          <span className="bg-gradient-to-r from-white via-blue-100 to-purple-300 bg-clip-text text-transparent">
-            30+ qualified leads a month
-          </span>{" "}
-          <br className="hidden md:block" />
-          for local service businesses.
-        </h1>
-
-        {/* Subheadline */}
-        <motion.p
-          style={{ opacity: subOpacity, y: subY }}
-          className="mt-3 max-w-[340px] text-[12.5px] font-medium leading-6 text-white/75 md:mt-5 md:max-w-2xl md:text-base md:leading-7"
-        >
-          A short walkthrough of the tracking-first Google Ads system we use to
-          turn paid clicks into booked jobs — without burning ad spend.
-        </motion.p>
-
-        {/* Video placeholder */}
-        <motion.div
-          style={{ opacity: videoOpacity, y: videoY, scale: videoScale }}
-          className="relative mt-5 w-full max-w-[340px] md:mt-8 md:max-w-3xl"
-        >
-          {/* Glow halo */}
-          <div className="pointer-events-none absolute -inset-3 rounded-[1.6rem] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.4),transparent_60%)] blur-2xl md:-inset-5" />
-
-          <div className="relative overflow-hidden rounded-xl border border-white/15 bg-black shadow-[0_30px_100px_rgba(59,130,246,0.3),0_15px_60px_rgba(168,85,247,0.22)] md:rounded-2xl">
->>>>>>> f71fc9d (updated CaseStudy)
             <div className="pointer-events-none absolute inset-0 z-10 rounded-xl ring-1 ring-inset ring-white/10 md:rounded-2xl" />
 
             <div className="relative aspect-video w-full">
@@ -348,7 +278,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                   type="button"
                   onClick={togglePlay}
                   aria-label="Play video"
-
                   className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-b from-black/34 via-black/12 to-black/62 backdrop-blur-[1px] transition"
                 >
                   <motion.div
@@ -369,21 +298,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                     className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-black shadow-[0_0_50px_rgba(255,255,255,0.5)] md:h-20 md:w-20"
                   >
                     <span className="absolute inset-0 animate-ping rounded-full bg-white/25" />
-
-                  className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-b from-black/30 via-black/15 to-black/55 backdrop-blur-[1px] transition"
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.08 }}
-                    whileTap={{ scale: 0.94 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 260,
-                      damping: 18,
-                    }}
-                    className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-black shadow-[0_0_50px_rgba(255,255,255,0.5)] md:h-20 md:w-20"
-                  >
-                    <span className="absolute inset-0 animate-ping rounded-full bg-white/30" />
->>>>>>> f71fc9d (updated CaseStudy)
                     <Play
                       size={22}
                       className="relative ml-0.5 md:hidden"
@@ -398,7 +312,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                     />
                   </motion.div>
 
-
                   <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/65 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-white/95 backdrop-blur md:bottom-5 md:px-4 md:py-1.5 md:text-[11px]">
                     Tap to watch
                   </span>
@@ -406,11 +319,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                   <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/55 px-3 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-white/80 backdrop-blur md:left-5 md:top-5 md:text-[10px]">
                     2 min video
                   </span>
-
-                  <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/55 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur md:bottom-5 md:px-4 md:py-1.5 md:text-[11px]">
-                    Tap to watch
-                  </span>
-  
                 </button>
               )}
 
@@ -449,7 +357,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
           </MagneticCTA>
         </motion.div>
 
-  
         <motion.div
           style={{ opacity: trustOpacity, y: trustY }}
           className="mt-3 inline-flex max-w-[330px] flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-2 text-[10.5px] font-bold text-white/80 backdrop-blur-xl md:mt-5 md:max-w-none md:gap-3 md:rounded-full md:px-5 md:py-2.5 md:text-xs"
@@ -592,8 +499,7 @@ function BenefitCard({
 }
 
 function Benefits() {
-
- const { ref, progress } = useLockedSectionProgress ({speed: 0.00115});
+  const { ref, progress } = useLockedSectionProgress({ speed: 0.00115 });
 
   const headingY = useTransform(progress, [0, 0.18], [70, 0]);
   const headingOpacity = useTransform(progress, [0, 0.18], [0, 1]);
@@ -604,9 +510,9 @@ function Benefits() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="relative h-screen overflow-hidden bg-black px-4 py-16 text-white md:px-6 md:py-20"
+      className="relative min-h-screen overflow-visible bg-black px-4 py-20 text-white md:px-6 md:py-28"
     >
-      <div className="flex h-full items-center overflow-hidden">
+      <div className="flex min-h-screen items-center overflow-visible">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.14),transparent_38%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.12),transparent_38%)]" />
 
         <div className="relative mx-auto w-full max-w-6xl">
@@ -645,73 +551,6 @@ function Benefits() {
               className="h-full rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-fuchsia-400"
             />
           </div>
-=======
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 23,
-    mass: 0.42,
-  });
-
-  const headingY = useTransform(progress, [0, 0.3], [80, 0]);
-  const headingOpacity = useTransform(progress, [0, 0.2], [0, 1]);
-  const headingScale = useTransform(progress, [0, 0.3], [0.9, 1]);
-
-  const progressBarWidth = useTransform(
-    progress,
-    [0.1, 0.95],
-    ["0%", "100%"]
-  );
-
-  return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden px-4 py-20 md:px-6 md:py-28"
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.14),transparent_38%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.12),transparent_38%)]" />
-
-      <div className="relative mx-auto max-w-6xl">
-        <motion.div
-          style={{ y: headingY, opacity: headingOpacity, scale: headingScale }}
-          className="mx-auto max-w-3xl text-center"
-        >
-          <div className="mb-4 inline-flex rounded-full border border-purple-400/25 bg-white/[0.04] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.28em] text-purple-200 md:mb-5 md:text-xs">
-            What you&apos;ll learn
-          </div>
-
-          <h2 className="text-[1.85rem] font-black leading-[0.95] tracking-[-0.06em] md:text-6xl">
-            Everything inside this short training.
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65 md:mt-6 md:text-base md:leading-8">
-            No fluff. No theory. Just the exact playbook we use with our local
-            service clients.
-          </p>
-        </motion.div>
-
-        <div className="mt-10 grid gap-4 md:mt-14 md:grid-cols-2 md:gap-6">
-          {benefits.map((b, i) => (
-            <BenefitCard
-              key={b.title}
-              benefit={b}
-              index={i}
-              progress={progress}
-            />
-          ))}
-        </div>
-
-        <div className="mx-auto mt-10 h-1 max-w-2xl overflow-hidden rounded-full bg-white/10 md:mt-14">
-          <motion.div
-            style={{ width: progressBarWidth }}
-            className="h-full rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-fuchsia-400"
-          />
->>>>>>> f71fc9d (updated CaseStudy)
         </div>
       </div>
     </section>
