@@ -2,12 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import {
+  AnimatePresence,
   motion,
   MotionValue,
-  useTransform,
-  AnimatePresence,
   useScroll,
   useSpring,
+  useTransform,
 } from "framer-motion";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 
@@ -63,11 +63,7 @@ function TallyModal({
     const deltaY = endY - touchStartY.current;
     const deltaX = Math.abs(endX - touchStartX.current);
 
-    const forcefulSwipeDown = deltaY > 150 && deltaX < 80;
-
-    if (forcefulSwipeDown) {
-      onClose();
-    }
+    if (deltaY > 150 && deltaX < 80) onClose();
 
     touchStartY.current = null;
     touchStartX.current = null;
@@ -171,55 +167,57 @@ function HeroButton({
 
 function HeroContent({ progress }: { progress: MotionValue<number> }) {
   const [activeForm, setActiveForm] = useState<"demo" | "audit" | null>(null);
-  useEffect(() => {
-  const handleOpenForm = (event: Event) => {
-    const customEvent = event as CustomEvent<{ type: "demo" | "audit" }>;
-
-    if (customEvent.detail?.type === "demo") {
-      setActiveForm("demo");
-    }
-
-    if (customEvent.detail?.type === "audit") {
-      setActiveForm("audit");
-    }
-  };
-
-  window.addEventListener("open-convertiq-form", handleOpenForm);
-
-  return () => {
-    window.removeEventListener("open-convertiq-form", handleOpenForm);
-  };
-}, []);
   const repeatedClientLogos = Array(12).fill(clientLogos).flat();
-
-  const videoY = useTransform(progress, [0, 1], [20, -35]);
-  const videoScale = useTransform(progress, [0, 1], [1.06, 1.16]);
-
-const badgeOpacity = useTransform(progress, [0, 0.15], [1, 0]);
-const badgeY = useTransform(progress, [0, 0.15], [0, -18]);
-
-const headlineY = useTransform(progress, [0, 0.35], [0, -90]);
-const headlineScale = useTransform(progress, [0, 0.35], [1, 0.82]);
-const headlineOpacity = useTransform(progress, [0, 0.55], [1, 0.45]);
-
-  const subOpacity = useTransform(progress, [0.15, 0.35], [0, 1]);
-  const subY = useTransform(progress, [0.15, 0.35], [22, 0]);
-
-  const ctaOpacity = useTransform(progress, [0.25, 0.5], [0, 1]);
-  const ctaY = useTransform(progress, [0.25, 0.5], [24, 0]);
-
-  const trustOpacity = useTransform(progress, [0.5, 0.7], [0, 1]);
-  const trustY = useTransform(progress, [0.5, 0.7], [18, 0]);
-
-  const logoOpacity = useTransform(progress, [0.78, 1], [0, 1]);
-  const logoY = useTransform(progress, [0.78, 1], [26, 0]);
-
   const [mouse, setMouse] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const handleOpenForm = (event: Event) => {
+      const customEvent = event as CustomEvent<{ type: "demo" | "audit" }>;
+
+      if (customEvent.detail?.type === "demo") setActiveForm("demo");
+      if (customEvent.detail?.type === "audit") setActiveForm("audit");
+    };
+
+    window.addEventListener("open-convertiq-form", handleOpenForm);
+    return () => window.removeEventListener("open-convertiq-form", handleOpenForm);
+  }, []);
+
+  const videoY = useTransform(progress, [0, 1], [18, -70]);
+  const videoScale = useTransform(progress, [0, 1], [1.08, 1.28]);
+
+  const mobileNavOpacity = useTransform(progress, [0, 0.08, 1], [1, 1, 0.96]);
+  const mobileNavY = useTransform(progress, [0, 1], [0, -2]);
+
+  const contentY = useTransform(progress, [0, 0.35, 0.7, 1], [0, -85, -160, -220]);
+  const contentScale = useTransform(progress, [0, 0.45, 1], [1, 0.92, 0.82]);
+
+  const badgeOpacity = useTransform(progress, [0, 0.25], [1, 0.1]);
+  const badgeY = useTransform(progress, [0, 0.25], [0, -24]);
+
+  const headlineY = useTransform(progress, [0, 0.5, 1], [0, -20, -50]);
+  const headlineScale = useTransform(progress, [0, 0.5, 1], [1, 0.96, 0.9]);
+  const headlineOpacity = useTransform(progress, [0, 1], [1, 0.95]);
+
+  const subOpacity = useTransform(progress, [0.12, 0.3, 0.72], [0, 1, 0.15]);
+  const subY = useTransform(progress, [0.12, 0.3], [26, 0]);
+
+  const ctaOpacity = useTransform(progress, [0.28, 0.48, 0.82], [0, 1, 0.2]);
+  const ctaY = useTransform(progress, [0.28, 0.48], [30, 0]);
+
+  const trustOpacity = useTransform(progress, [0.5, 0.68, 0.9], [0, 1, 0.1]);
+  const trustY = useTransform(progress, [0.5, 0.68], [24, 0]);
+
+  const systemCardOpacity = useTransform(progress, [0.62, 0.82], [0, 1]);
+  const systemCardY = useTransform(progress, [0.62, 0.82], [70, 0]);
+  const systemCardScale = useTransform(progress, [0.62, 0.82], [0.9, 1]);
+
+  const logoOpacity = useTransform(progress, [0.82, 1], [0, 1]);
+  const logoY = useTransform(progress, [0.82, 1], [40, 0]);
 
   return (
     <>
       <div
-        className="relative h-full w-full overflow-hidden rounded-2xl"
+        className="relative h-full w-full overflow-hidden rounded-none md:rounded-2xl"
         onMouseMove={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
           setMouse({
@@ -238,75 +236,114 @@ const headlineOpacity = useTransform(progress, [0, 0.55], [1, 0.45]);
           playsInline
         />
 
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.15),rgba(0,0,0,0.88))]" />
+        <div className="absolute inset-0 bg-black/38 md:bg-black/55" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.08),rgba(0,0,0,0.62)_48%,rgba(0,0,0,0.9))]" />
 
         <motion.div
           animate={{ left: `${mouse.x}%`, top: `${mouse.y}%` }}
           transition={{ type: "spring", stiffness: 70, damping: 24 }}
-          className="pointer-events-none absolute z-10 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[80px] md:h-[360px] md:w-[360px] md:blur-[100px]"
+          className="pointer-events-none absolute z-10 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/12 blur-[80px] md:h-[360px] md:w-[360px] md:blur-[100px]"
         />
 
-        <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 py-6 text-center md:px-6 md:py-0">
-         <motion.div
-  style={{ opacity: badgeOpacity, y: badgeY }}
-  className="mb-3 inline-flex rounded-full border border-purple-400/30 bg-purple-500/20 px-3 py-1 text-[10px] font-bold text-purple-100 backdrop-blur md:mb-5 md:px-4 md:py-1.5 md:text-xs"
->
-  Trusted by local businesses across Ontario
-</motion.div>
+        <motion.div
+          style={{ opacity: mobileNavOpacity, y: mobileNavY }}
+          className="absolute left-4 right-4 top-5 z-40 flex items-center justify-between md:hidden"
+        >
+          <img
+            src="/convertiqmedia.png"
+            alt="ConvertIQ Media"
+            className="h-14 w-14 bg-white object-contain p-1"
+          />
 
-        <motion.h1
-  style={{ y: headlineY, scale: headlineScale, opacity: headlineOpacity }}
-  className="max-w-5xl text-[1.95rem] font-black leading-[0.94] tracking-[-0.065em] text-white min-[390px]:text-[2.12rem] md:text-6xl md:leading-[0.95] lg:text-7xl"
->
-  Generate More Calls &<br />
-  Booked Jobs — With<br />
-  <span className="bg-gradient-to-r from-white via-blue-100 to-purple-300 bg-clip-text text-transparent">
-    High-Intent Google Ads
-  </span>
-</motion.h1>
-
-          <motion.p
-            style={{ opacity: subOpacity, y: subY }}
-            className="mt-3 max-w-[330px] text-[12.5px] font-medium leading-6 text-white/75 md:mt-6 md:max-w-2xl md:text-base md:leading-7"
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl bg-[#38bdf8] px-5 py-3 text-sm font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.5)]"
           >
-            We build your website, launch your ads, and create a system that
-            consistently brings in qualified leads.
-          </motion.p>
+            Book Call
+          </a>
+        </motion.div>
 
+        <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 pt-28 text-center md:px-6 md:pt-0">
           <motion.div
-            style={{ opacity: ctaOpacity, y: ctaY }}
-            className="mt-4 grid w-full max-w-[300px] gap-2.5 md:mt-8 md:flex md:max-w-none md:flex-row md:items-center md:justify-center md:gap-4"
+            style={{ y: contentY, scale: contentScale }}
+            className="flex flex-col items-center"
           >
-            <HeroButton href={CALENDLY_URL} variant="sky">
-              Book Free Strategy Call ↗
-            </HeroButton>
+            <motion.div
+              style={{ opacity: badgeOpacity, y: badgeY }}
+              className="mb-3 inline-flex rounded-full border border-purple-400/30 bg-purple-500/20 px-3 py-1 text-[10px] font-bold text-purple-100 backdrop-blur md:mb-5 md:px-4 md:py-1.5 md:text-xs"
+            >
+              Trusted by local businesses across Ontario
+            </motion.div>
 
-            <HeroButton onClick={() => setActiveForm("demo")} variant="blue">
-              Website Demo ↓
-            </HeroButton>
+            <motion.h1
+              style={{ y: headlineY, scale: headlineScale, opacity: headlineOpacity }}
+              className="max-w-5xl text-[2rem] font-black leading-[0.94] tracking-[-0.065em] text-white drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)] min-[390px]:text-[2.18rem] md:text-6xl md:leading-[0.95] lg:text-7xl"
+            >
+              Generate More Calls &<br />
+              Booked Jobs — With<br />
+              <span className="bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+                High-Intent Google Ads
+              </span>
+            </motion.h1>
 
-            <HeroButton onClick={() => setActiveForm("audit")} variant="purple">
-              Quick Audit ↓
-            </HeroButton>
+            <motion.p
+              style={{ opacity: subOpacity, y: subY }}
+              className="mt-4 max-w-[330px] text-[13px] font-semibold leading-6 text-white/90 drop-shadow-[0_3px_18px_rgba(0,0,0,0.8)] md:mt-6 md:max-w-2xl md:text-base md:leading-7"
+            >
+              We build your website, launch your ads, and create a system that
+              consistently brings in qualified leads.
+            </motion.p>
+
+            <motion.div
+              style={{ opacity: ctaOpacity, y: ctaY }}
+              className="mt-4 grid w-full max-w-[300px] gap-2.5 md:mt-8 md:flex md:max-w-none md:flex-row md:items-center md:justify-center md:gap-4"
+            >
+              <HeroButton href={CALENDLY_URL} variant="sky">
+                Book Free Strategy Call ↗
+              </HeroButton>
+
+              <HeroButton onClick={() => setActiveForm("demo")} variant="blue">
+                Website Demo ↓
+              </HeroButton>
+
+              <HeroButton onClick={() => setActiveForm("audit")} variant="purple">
+                Quick Audit ↓
+              </HeroButton>
+            </motion.div>
+
+            <motion.div
+              style={{ opacity: trustOpacity, y: trustY }}
+              className="mt-4 inline-flex max-w-[330px] flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-2.5 text-[10.5px] font-bold text-white/90 backdrop-blur-xl md:mt-10 md:max-w-none md:gap-3 md:rounded-full md:px-5 md:py-3 md:text-xs"
+            >
+              <span className="text-yellow-300">★★★★★</span>
+              <span>5 Stars on Google</span>
+              <span className="hidden h-1 w-1 rounded-full bg-white/35 md:block" />
+              <span className="text-white/70 md:text-white/85">
+                Trusted by 25+ home service businesses
+              </span>
+            </motion.div>
           </motion.div>
 
           <motion.div
-            style={{ opacity: trustOpacity, y: trustY }}
-            whileHover={{ scale: 1.04 }}
-            className="mt-4 inline-flex max-w-[330px] flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-2.5 text-[10.5px] font-bold text-white/80 backdrop-blur-xl md:mt-10 md:max-w-none md:gap-3 md:rounded-full md:px-5 md:py-3 md:text-xs"
+            style={{ opacity: systemCardOpacity, y: systemCardY, scale: systemCardScale }}
+            className="absolute bottom-28 left-4 right-4 z-30 rounded-3xl border border-white/10 bg-black/45 p-4 text-left text-white shadow-[0_30px_120px_rgba(37,99,235,0.28)] backdrop-blur-xl md:hidden"
           >
-            <span className="text-yellow-300">★★★★★</span>
-            <span>5 Stars on Google</span>
-            <span className="hidden h-1 w-1 rounded-full bg-white/35 md:block" />
-            <span className="text-white/62 md:text-white/80">
-              Trusted by 25+ home service businesses
-            </span>
+            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-blue-200">
+              The ConvertIQ System
+            </p>
+            <h3 className="mt-2 text-xl font-black leading-tight tracking-[-0.04em]">
+              Website + Ads + Tracking = Booked Jobs
+            </h3>
+            <p className="mt-2 text-xs font-medium leading-6 text-white/72">
+              Scroll through the hero to see the offer, proof, and client logos reveal before the page releases.
+            </p>
           </motion.div>
 
           <motion.div
             style={{ opacity: logoOpacity, y: logoY }}
-            className="mt-4 w-full max-w-[340px] overflow-hidden border-y border-white/10 py-2 md:mt-8 md:max-w-6xl md:py-4"
+            className="absolute bottom-8 left-4 right-4 z-30 overflow-hidden border-y border-white/10 py-2 md:static md:mt-8 md:w-full md:max-w-6xl md:py-4"
           >
             <div className="client-marquee-track flex w-max items-center gap-0">
               {repeatedClientLogos.map((src, i) => (
@@ -318,7 +355,7 @@ const headlineOpacity = useTransform(progress, [0, 0.55], [1, 0.45]);
                   <img
                     src={src}
                     alt="Client logo"
-                    className="h-11 w-auto object-contain opacity-90 transition duration-500 hover:scale-105 hover:opacity-100 md:h-[6.8rem]"
+                    className="h-11 w-auto object-contain opacity-95 transition duration-500 hover:scale-105 hover:opacity-100 md:h-[6.8rem]"
                   />
                 </div>
               ))}
@@ -335,6 +372,7 @@ const headlineOpacity = useTransform(progress, [0, 0.55], [1, 0.45]);
     </>
   );
 }
+
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -358,18 +396,17 @@ function MobileHeroScroll() {
   });
 
   const progress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 24,
-    mass: 0.35,
+    stiffness: 45,
+    damping: 16,
+    mass: 0.22,
   });
 
   return (
     <section
       id="home"
       ref={ref}
-      className="relative h-[320svh] bg-black text-white"
+      className="relative h-[430svh] bg-black text-white"
     >
-      {/* Sticky container = locks user visually */}
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <HeroContent progress={progress} />
       </div>
