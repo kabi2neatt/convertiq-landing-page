@@ -61,7 +61,8 @@ function CertificationCard({ item, index, progress }: { item: (typeof certificat
 }
 
 export function WhyConvertIQ() {
-  const { ref, progress, } = useLockedSectionProgress({ speed: 0.00108 });
+  const { ref, progress } = useLockedSectionProgress({ speed: 0.00108 });
+
   const headingY = useTransform(progress, [0, 0.1], [60, 0]);
   const headingOpacity = useTransform(progress, [0, 0.1], [0, 1]);
   const ringRotate = useTransform(progress, [0, 1], [0, 220]);
@@ -74,39 +75,57 @@ export function WhyConvertIQ() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="why-us" ref={ref as React.RefObject<HTMLElement>} className="relative h-screen bg-black text-white">
-      <div className="flex h-screen items-center overflow-hidden px-4 py-12 md:px-6 md:py-20">
+    <section id="why-us" ref={ref as React.RefObject<HTMLElement>} className="relative min-h-screen bg-black text-white">
+      <div className="flex min-h-screen items-center overflow-visible px-4 py-20 md:px-6 md:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.18),transparent_34%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.14),transparent_35%)]" />
+
         <motion.div style={{ rotate: ringRotate }} className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 md:block" />
         <motion.div style={{ rotate: ringRotate }} className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[430px] w-[430px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-400/10 md:block" />
+
         <div className="relative mx-auto w-full max-w-7xl">
           <motion.div style={{ opacity: headingOpacity, y: headingY }} className="mx-auto max-w-4xl text-center">
-            <div className="mb-3 inline-flex rounded-full border border-purple-400/25 bg-white/[0.04] px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-purple-200 md:mb-5 md:px-5 md:py-2 md:text-xs md:tracking-[0.28em]">Why ConvertIQ Media?</div>
+            <div className="mb-3 inline-flex rounded-full border border-purple-400/25 bg-white/[0.04] px-4 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-purple-200 md:mb-5 md:px-5 md:py-2 md:text-xs md:tracking-[0.28em]">
+              Why ConvertIQ Media?
+            </div>
+
             <h2 className="text-[2rem] font-black leading-[0.92] tracking-[-0.065em] md:text-7xl md:leading-[0.95] md:tracking-[-0.06em]">
               A tracking-first system built to generate <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">qualified leads.</span>
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-xs leading-6 text-white/72 md:mt-6 md:text-lg md:leading-7">Not just clicks. Not vanity metrics. A full system designed around phone calls, quote requests, and booked jobs.</p>
+
+            <p className="mx-auto mt-3 max-w-2xl text-xs leading-6 text-white/72 md:mt-6 md:text-lg md:leading-7">
+              Not just clicks. Not vanity metrics. A full system designed around phone calls, quote requests, and booked jobs.
+            </p>
           </motion.div>
 
-          <div className="relative mt-4 md:mt-10">
+          <div className="relative mt-6 md:mt-12">
             <motion.div style={{ scale: centerScale, rotate: centerRotate }} className="pointer-events-none absolute left-1/2 top-1/2 z-0 hidden h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-300/20 bg-blue-500/[0.035] shadow-[0_0_90px_rgba(59,130,246,0.22)] backdrop-blur-xl lg:flex">
-              <div className="m-auto flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-blue-600/35 to-purple-600/35 text-center text-sm font-black uppercase tracking-[0.2em] text-white/75">Lead<br />System</div>
+              <div className="m-auto flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-blue-600/35 to-purple-600/35 text-center text-sm font-black uppercase tracking-[0.2em] text-white/75">
+                Lead<br />System
+              </div>
             </motion.div>
+
             <motion.div style={{ y: gridY, scale: gridScale }} className="relative z-10 hidden gap-5 md:grid md:grid-cols-2 lg:grid-cols-3">
-              {reasons.map((reason, index) => <ReasonCard key={reason.title} reason={reason} index={index} progress={progress} />)}
+              {reasons.map((reason, index) => (
+                <ReasonCard key={reason.title} reason={reason} index={index} progress={progress} />
+              ))}
             </motion.div>
+
             <div className="relative z-10 grid grid-cols-2 gap-2 md:hidden">
-              {reasons.map((reason, index) => <ReasonCard key={reason.title} reason={reason} index={index} progress={progress} />)}
+              {reasons.map((reason, index) => (
+                <ReasonCard key={reason.title} reason={reason} index={index} progress={progress} />
+              ))}
             </div>
           </div>
 
-          <motion.div style={{ y: certY, scale: certScale }} className="relative z-20 mt-3 flex justify-center md:mt-10">
+          <motion.div style={{ y: certY, scale: certScale }} className="relative z-20 mt-5 flex justify-center md:mt-12">
             <div className="grid w-full max-w-4xl grid-cols-2 gap-2 md:grid-cols-2 md:gap-6">
-              {certifications.map((item, index) => <CertificationCard key={item.title} item={item} index={index} progress={progress} />)}
+              {certifications.map((item, index) => (
+                <CertificationCard key={item.title} item={item} index={index} progress={progress} />
+              ))}
             </div>
           </motion.div>
 
-          <div className="mx-auto mt-3 h-1.5 max-w-4xl overflow-hidden rounded-full bg-white/10 md:mt-7">
+          <div className="mx-auto mt-5 h-1.5 max-w-4xl overflow-hidden rounded-full bg-white/10 md:mt-8">
             <motion.div style={{ width: progressWidth }} className="h-full rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-fuchsia-400" />
           </div>
         </div>
