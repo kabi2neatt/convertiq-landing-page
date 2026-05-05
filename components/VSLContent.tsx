@@ -505,7 +505,7 @@ function BenefitCard({
 }
 
 function Benefits() {
-  const { ref, progress, lockProps } = useLockedSectionProgress({
+  const { ref, progress, } = useLockedSectionProgress({
     speed: 0.00115,
   });
 
@@ -518,7 +518,6 @@ function Benefits() {
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      {...lockProps}
       className="relative h-screen overflow-hidden bg-black px-4 py-16 text-white md:px-6 md:py-20"
     >
       <div className="flex h-full items-center overflow-hidden">
