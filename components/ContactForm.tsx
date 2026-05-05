@@ -140,7 +140,7 @@ export function ContactForm() {
               />
 
               <Image
-                src="Convertiqmedia.png"
+                src="/convertiqmedia.png"
                 alt="ConvertIQ Media"
                 width={400}
                 height={420}
