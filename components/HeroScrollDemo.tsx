@@ -7,10 +7,10 @@ import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
 
 const clientLogos = [
-  "/clients/Summit Roofing.png",
-  "/clients/Clearflow Plumbing.png",
-  "/clients/Multi Logo.png",
-  "/clients/mrgutter.png",
+  "/Clients/Summit Roofing.png",
+  "/Clients/Clearflow Plumbing.png",
+  "/Clients/Multi Logo.png",
+  "/Clients/mrgutter.png",
 ];
 
 function TallyModal({
