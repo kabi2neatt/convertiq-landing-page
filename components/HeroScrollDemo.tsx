@@ -179,14 +179,14 @@ function FixedMobileNavbar() {
   const close = () => setOpen(false);
 
   return (
-    <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top)+0.75rem)] z-[999999] md:hidden">
-      <div className="rounded-3xl border border-white/10 bg-black/70 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
+    <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top)+0.6rem)] z-[999999] md:hidden">
+      <div className="rounded-3xl border border-white/10 bg-black/68 p-1.5 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
         <div className="flex items-center justify-between gap-2">
           <a href="#home" onClick={close} className="shrink-0">
             <img
               src="/convertiqmedia.png"
               alt="ConvertIQ Media"
-              className="h-12 w-12 rounded-sm bg-white object-contain p-1"
+              className="h-11 w-11 rounded-sm bg-white object-contain p-1"
             />
           </a>
 
@@ -194,17 +194,17 @@ function FixedMobileNavbar() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 rounded-2xl bg-[#38bdf8] px-5 py-3 text-sm font-black text-black shadow-[0_0_28px_rgba(56,189,248,0.55)]"
+            className="shrink-0 rounded-2xl bg-[#38bdf8] px-5 py-2.5 text-sm font-black text-black shadow-[0_0_28px_rgba(56,189,248,0.55)]"
           >
             Book Call
           </a>
         </div>
 
-        <div className="mt-2 grid grid-cols-2 gap-2">
+        <div className="mt-1.5 grid grid-cols-2 gap-1.5">
           <a
             href="#home"
             onClick={close}
-            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-3 text-center text-sm font-black text-white backdrop-blur-xl"
+            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-2.5 text-center text-sm font-black text-white backdrop-blur-xl"
           >
             Home
           </a>
@@ -212,7 +212,7 @@ function FixedMobileNavbar() {
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
-            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-3 text-center text-sm font-black text-white backdrop-blur-xl"
+            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-2.5 text-center text-sm font-black text-white backdrop-blur-xl"
           >
             Navigation ↓
           </button>
@@ -311,13 +311,13 @@ function HeroContent({
   const contentY = useTransform(
     progress,
     [0, 0.35, 0.7, 1],
-    isMobile ? [0, -85, -160, -220] : [0, 0, 0, 0]
+    isMobile ? [0, -35, -75, -105] : [0, 0, 0, 0]
   );
 
   const contentScale = useTransform(
     progress,
     [0, 0.45, 1],
-    isMobile ? [1, 0.92, 0.82] : [1, 1, 1]
+    isMobile ? [1, 0.96, 0.9] : [1, 1, 1]
   );
 
   const badgeOpacity = useTransform(
@@ -334,13 +334,13 @@ function HeroContent({
   const headlineY = useTransform(
     progress,
     [0, 0.5, 1],
-    isMobile ? [0, -20, -50] : [0, 0, 0]
+    isMobile ? [0, -8, -18] : [0, 0, 0]
   );
 
   const headlineScale = useTransform(
     progress,
     [0, 0.5, 1],
-    isMobile ? [1, 0.96, 0.9] : [1, 1, 1]
+    isMobile ? [1, 0.98, 0.94] : [1, 1, 1]
   );
 
   const headlineOpacity = useTransform(
@@ -440,7 +440,7 @@ function HeroContent({
           className="pointer-events-none absolute z-10 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/12 blur-[80px] md:h-[360px] md:w-[360px] md:blur-[100px]"
         />
 
-        <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 pt-28 text-center md:px-6 md:pt-0">
+        <div className="relative z-20 flex h-full flex-col items-center justify-start px-4 pt-[14.75rem] text-center md:justify-center md:px-6 md:pt-0">
           <motion.div
             style={{ y: contentY, scale: contentScale }}
             className="flex flex-col items-center"
@@ -454,7 +454,7 @@ function HeroContent({
 
             <motion.h1
               style={{ y: headlineY, scale: headlineScale, opacity: headlineOpacity }}
-              className="max-w-5xl text-[2rem] font-black leading-[0.94] tracking-[-0.065em] text-white brightness-110 drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)] min-[390px]:text-[2.18rem] md:text-6xl md:leading-[0.95] lg:text-7xl"
+              className="max-w-5xl text-[1.85rem] font-black leading-[0.94] tracking-[-0.065em] text-white brightness-110 drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)] min-[390px]:text-[2.02rem] md:text-6xl md:leading-[0.95] lg:text-7xl"
             >
               Generate More Calls &<br />
               Booked Jobs — With<br />
@@ -465,7 +465,7 @@ function HeroContent({
 
             <motion.p
               style={{ opacity: subOpacity, y: subY }}
-              className="mt-4 max-w-[330px] text-[13px] font-semibold leading-6 text-white/90 drop-shadow-[0_3px_18px_rgba(0,0,0,0.8)] md:mt-6 md:max-w-2xl md:text-base md:leading-7"
+              className="mt-3 max-w-[330px] text-[12.5px] font-semibold leading-6 text-white/90 drop-shadow-[0_3px_18px_rgba(0,0,0,0.8)] md:mt-6 md:max-w-2xl md:text-base md:leading-7"
             >
               We build your website, launch your ads, and create a system that
               consistently brings in qualified leads.
@@ -473,7 +473,7 @@ function HeroContent({
 
             <motion.div
               style={{ opacity: ctaOpacity, y: ctaY }}
-              className="mt-4 grid w-full max-w-[300px] gap-2.5 md:mt-8 md:flex md:max-w-none md:flex-row md:items-center md:justify-center md:gap-4"
+              className="mt-3 grid w-full max-w-[300px] gap-2.5 md:mt-8 md:flex md:max-w-none md:flex-row md:items-center md:justify-center md:gap-4"
             >
               <HeroButton href={CALENDLY_URL} variant="sky">
                 Book Free Strategy Call ↗
@@ -507,7 +507,7 @@ function HeroContent({
               y: systemCardY,
               scale: systemCardScale,
             }}
-            className="absolute bottom-28 left-4 right-4 z-30 rounded-3xl border border-white/10 bg-black/45 p-4 text-left text-white shadow-[0_30px_120px_rgba(37,99,235,0.28)] backdrop-blur-xl md:hidden"
+            className="absolute bottom-24 left-4 right-4 z-30 rounded-3xl border border-white/10 bg-black/45 p-4 text-left text-white shadow-[0_30px_120px_rgba(37,99,235,0.28)] backdrop-blur-xl md:hidden"
           >
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-blue-200">
               The ConvertIQ System
@@ -523,7 +523,7 @@ function HeroContent({
 
           <motion.div
             style={{ opacity: logoOpacity, y: logoY }}
-            className="absolute bottom-8 left-4 right-4 z-30 overflow-hidden border-y border-white/10 py-2 md:static md:mt-8 md:w-full md:max-w-6xl md:py-4"
+            className="absolute bottom-5 left-4 right-4 z-30 overflow-hidden border-y border-white/10 py-2 md:static md:mt-8 md:w-full md:max-w-6xl md:py-4"
           >
             <div className="client-marquee-track flex w-max items-center gap-0">
               {repeatedClientLogos.map((src, i) => (
