@@ -509,7 +509,7 @@ function MobileHeroScroll() {
         </a>
       </div>
 
-      <HeroContent progress={progress} />
+     <HeroContent progress={progress} isMobile />
     </section>
   );
 }
