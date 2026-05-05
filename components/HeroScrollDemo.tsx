@@ -315,8 +315,54 @@ function HeroContent({ progress }: { progress: MotionValue<number> }) {
     </>
   );
 }
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  return isMobile;
+}
+
+function MobileHeroScroll() {
+  const ref = React.useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.35,
+  });
+
+  return (
+    <section
+      id="home"
+      ref={ref}
+      className="relative h-[220svh] bg-black text-white"
+    >
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        <HeroContent progress={progress} />
+      </div>
+    </section>
+  );
+}
 
 export function HeroScrollDemo() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileHeroScroll />;
+  }
+
   return (
     <section id="home" className="relative overflow-hidden bg-black text-white">
       <ContainerScroll>
