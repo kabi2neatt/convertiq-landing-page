@@ -180,7 +180,7 @@ function FixedMobileNavbar() {
 
   return (
     <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top)+0.85rem)] z-[999999] md:hidden">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
         <a href="#home" onClick={close} className="shrink-0">
           <img
             src="/convertiqmedia.png"
@@ -189,11 +189,11 @@ function FixedMobileNavbar() {
           />
         </a>
 
-        <div className="flex min-w-0 items-center gap-2">
+        <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1.5 overflow-hidden">
           <a
             href="#home"
             onClick={close}
-            className="rounded-xl border border-white/10 bg-black/75 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+            className="shrink-0 rounded-xl border border-white/10 bg-black/75 px-2.5 py-2.5 text-[11px] font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
           >
             Home
           </a>
@@ -201,16 +201,16 @@ function FixedMobileNavbar() {
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
-            className="rounded-xl border border-white/10 bg-black/75 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+            className="min-w-0 shrink rounded-xl border border-white/10 bg-black/75 px-2.5 py-2.5 text-[11px] font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
           >
-            Navigation ↓
+            <span className="block max-w-[86px] truncate">Navigation ↓</span>
           </button>
 
           <a
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-xl bg-[#38bdf8] px-4 py-3 text-xs font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.55)]"
+            className="shrink-0 rounded-xl bg-[#38bdf8] px-3 py-2.5 text-[11px] font-black text-black shadow-[0_0_25px_rgba(56,189,248,0.55)]"
           >
             Book
           </a>
