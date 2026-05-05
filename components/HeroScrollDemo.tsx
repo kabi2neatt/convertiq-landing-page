@@ -388,14 +388,6 @@ function useIsMobile() {
 }
 
 function MobileHeroScroll() {
-  const ref = React.useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-
-function MobileHeroScroll() {
   const progressRaw = useMotionValue(0);
   const progressValue = React.useRef(0);
   const touchStartY = React.useRef<number | null>(null);
@@ -444,7 +436,6 @@ function MobileHeroScroll() {
 
     const onTouchMove = (e: TouchEvent) => {
       if (touchStartY.current === null) return;
-
       e.preventDefault();
 
       const currentY = e.touches[0]?.clientY ?? touchStartY.current;
@@ -494,6 +485,22 @@ function MobileHeroScroll() {
       </div>
 
       <HeroContent progress={progress} />
+    </section>
+  );
+}
+
+export function HeroScrollDemo() {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileHeroScroll />;
+  }
+
+  return (
+    <section id="home" className="relative overflow-hidden bg-black text-white">
+      <ContainerScroll>
+        {(progress) => <HeroContent progress={progress} />}
+      </ContainerScroll>
     </section>
   );
 }
