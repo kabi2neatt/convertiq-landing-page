@@ -61,7 +61,7 @@ function CertificationCard({ item, index, progress }: { item: (typeof certificat
 }
 
 export function WhyConvertIQ() {
-  const { ref, progress, lockProps } = useLockedSectionProgress({ speed: 0.00108 });
+  const { ref, progress, } = useLockedSectionProgress({ speed: 0.00108 });
   const headingY = useTransform(progress, [0, 0.1], [60, 0]);
   const headingOpacity = useTransform(progress, [0, 0.1], [0, 1]);
   const ringRotate = useTransform(progress, [0, 1], [0, 220]);
@@ -74,7 +74,7 @@ export function WhyConvertIQ() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="why-us" ref={ref as React.RefObject<HTMLElement>} {...lockProps} className="relative h-screen bg-black text-white">
+    <section id="why-us" ref={ref as React.RefObject<HTMLElement>} className="relative h-screen bg-black text-white">
       <div className="flex h-screen items-center overflow-hidden px-4 py-12 md:px-6 md:py-20">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.18),transparent_34%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.14),transparent_35%)]" />
         <motion.div style={{ rotate: ringRotate }} className="pointer-events-none absolute left-1/2 top-1/2 hidden h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10 md:block" />
