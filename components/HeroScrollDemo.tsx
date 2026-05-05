@@ -166,7 +166,13 @@ function HeroButton({
   );
 }
 
-function HeroContent({ progress }: { progress: MotionValue<number> }) {
+function HeroContent({
+  progress,
+  isMobile = false,
+}: {
+  progress: MotionValue<number>;
+  isMobile?: boolean;
+}) {
   const [activeForm, setActiveForm] = useState<"demo" | "audit" | null>(null);
   const repeatedClientLogos = Array(12).fill(clientLogos).flat();
   const [mouse, setMouse] = useState({ x: 50, y: 50 });
