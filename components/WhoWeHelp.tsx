@@ -16,21 +16,21 @@ const cards = [
     eyebrow: "01",
     title: "Trades & Contractors",
     text: "Roofers, plumbers, HVAC, electricians, and contractors that want quote requests from people actively searching.",
-    image: "/trades.jpg",
+    image: "/Roofing.jpg",
   },
   {
     icon: Home,
     eyebrow: "02",
     title: "Home Services",
     text: "Landscapers, cleaners, pest control, repairs, and maintenance businesses that need steady booked jobs.",
-    image: "/homeservices.jpg",
+    image: "/landscaping.jpg",
   },
   {
     icon: BriefcaseBusiness,
     eyebrow: "03",
     title: "Professional Services",
     text: "Clinics, accountants, agencies, consultants, and local firms that need qualified consultation requests.",
-    image: "/professional.jpg",
+    image: "/lawyer.jpg",
   },
 ];
 
