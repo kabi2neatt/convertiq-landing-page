@@ -505,9 +505,7 @@ function BenefitCard({
 }
 
 function Benefits() {
-  const { ref, progress, } = useLockedSectionProgress({
-    speed: 0.00115,
-  });
+ const { ref, progress } = useLockedSectionProgress(0.00115);
 
   const headingY = useTransform(progress, [0, 0.18], [70, 0]);
   const headingOpacity = useTransform(progress, [0, 0.18], [0, 1]);
