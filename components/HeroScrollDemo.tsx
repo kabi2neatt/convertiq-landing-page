@@ -195,6 +195,13 @@ function HeroContent({ progress }: { progress: MotionValue<number> }) {
   const videoY = useTransform(progress, [0, 1], [20, -35]);
   const videoScale = useTransform(progress, [0, 1], [1.06, 1.16]);
 
+const badgeOpacity = useTransform(progress, [0, 0.15], [1, 0]);
+const badgeY = useTransform(progress, [0, 0.15], [0, -18]);
+
+const headlineY = useTransform(progress, [0, 0.35], [0, -90]);
+const headlineScale = useTransform(progress, [0, 0.35], [1, 0.82]);
+const headlineOpacity = useTransform(progress, [0, 0.55], [1, 0.45]);
+
   const subOpacity = useTransform(progress, [0.15, 0.35], [0, 1]);
   const subY = useTransform(progress, [0.15, 0.35], [22, 0]);
 
@@ -241,17 +248,23 @@ function HeroContent({ progress }: { progress: MotionValue<number> }) {
         />
 
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 py-6 text-center md:px-6 md:py-0">
-          <div className="mb-3 inline-flex rounded-full border border-purple-400/30 bg-purple-500/20 px-3 py-1 text-[10px] font-bold text-purple-100 backdrop-blur md:mb-5 md:px-4 md:py-1.5 md:text-xs">
-            Trusted by local businesses across Ontario
-          </div>
+         <motion.div
+  style={{ opacity: badgeOpacity, y: badgeY }}
+  className="mb-3 inline-flex rounded-full border border-purple-400/30 bg-purple-500/20 px-3 py-1 text-[10px] font-bold text-purple-100 backdrop-blur md:mb-5 md:px-4 md:py-1.5 md:text-xs"
+>
+  Trusted by local businesses across Ontario
+</motion.div>
 
-          <h1 className="max-w-5xl text-[1.95rem] font-black leading-[0.94] tracking-[-0.065em] text-white min-[390px]:text-[2.12rem] md:text-6xl md:leading-[0.95] lg:text-7xl">
-            Generate More Calls &<br />
-            Booked Jobs — With<br />
-            <span className="bg-gradient-to-r from-white via-blue-100 to-purple-300 bg-clip-text text-transparent">
-              High-Intent Google Ads
-            </span>
-          </h1>
+        <motion.h1
+  style={{ y: headlineY, scale: headlineScale, opacity: headlineOpacity }}
+  className="max-w-5xl text-[1.95rem] font-black leading-[0.94] tracking-[-0.065em] text-white min-[390px]:text-[2.12rem] md:text-6xl md:leading-[0.95] lg:text-7xl"
+>
+  Generate More Calls &<br />
+  Booked Jobs — With<br />
+  <span className="bg-gradient-to-r from-white via-blue-100 to-purple-300 bg-clip-text text-transparent">
+    High-Intent Google Ads
+  </span>
+</motion.h1>
 
           <motion.p
             style={{ opacity: subOpacity, y: subY }}
@@ -354,7 +367,7 @@ function MobileHeroScroll() {
     <section
       id="home"
       ref={ref}
-      className="relative h-[220svh] bg-black text-white"
+      className="relative h-[300svh] bg-black text-white"
     >
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <HeroContent progress={progress} />
