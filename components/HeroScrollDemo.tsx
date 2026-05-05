@@ -395,37 +395,105 @@ function MobileHeroScroll() {
     offset: ["start start", "end end"],
   });
 
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 45,
-    damping: 16,
+function MobileHeroScroll() {
+  const progressRaw = useMotionValue(0);
+  const progressValue = React.useRef(0);
+  const touchStartY = React.useRef<number | null>(null);
+  const [released, setReleased] = useState(false);
+
+  const progress = useSpring(progressRaw, {
+    stiffness: 55,
+    damping: 18,
     mass: 0.22,
   });
 
+  useEffect(() => {
+    if (released) return;
+
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverscroll = document.documentElement.style.overscrollBehavior;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
+
+    const clamp = (value: number) => Math.min(1, Math.max(0, value));
+
+    const advance = (delta: number) => {
+      const next = clamp(progressValue.current + delta / 1450);
+      progressValue.current = next;
+      progressRaw.set(next);
+
+      if (next >= 1) {
+        setReleased(true);
+
+        window.setTimeout(() => {
+          document.body.style.overflow = originalBodyOverflow;
+          document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
+
+          window.scrollTo({
+            top: window.innerHeight,
+            behavior: "smooth",
+          });
+        }, 120);
+      }
+    };
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0]?.clientY ?? null;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (touchStartY.current === null) return;
+
+      e.preventDefault();
+
+      const currentY = e.touches[0]?.clientY ?? touchStartY.current;
+      const delta = touchStartY.current - currentY;
+
+      if (Math.abs(delta) > 2) {
+        advance(delta);
+        touchStartY.current = currentY;
+      }
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      advance(e.deltaY);
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overscrollBehavior = originalHtmlOverscroll;
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("wheel", onWheel);
+    };
+  }, [released, progressRaw]);
+
   return (
-    <section
-      id="home"
-      ref={ref}
-      className="relative h-[430svh] bg-black text-white"
-    >
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <HeroContent progress={progress} />
+    <section id="home" className="relative h-[100svh] overflow-hidden bg-black text-white">
+      <div className="absolute left-4 right-4 top-[calc(env(safe-area-inset-top)+1rem)] z-[999] flex items-center justify-between md:hidden">
+        <img
+          src="/convertiqmedia.png"
+          alt="ConvertIQ Media"
+          className="h-16 w-16 bg-white object-contain p-1"
+        />
+
+        <a
+          href={CALENDLY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-xl bg-[#38bdf8] px-6 py-4 text-base font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.55)]"
+        >
+          Book Call
+        </a>
       </div>
-    </section>
-  );
-}
 
-export function HeroScrollDemo() {
-  const isMobile = useIsMobile();
-
-  if (isMobile) {
-    return <MobileHeroScroll />;
-  }
-
-  return (
-    <section id="home" className="relative overflow-hidden bg-black text-white">
-      <ContainerScroll>
-        {(progress) => <HeroContent progress={progress} />}
-      </ContainerScroll>
+      <HeroContent progress={progress} />
     </section>
   );
 }
