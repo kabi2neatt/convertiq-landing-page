@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion, MotionValue, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  MotionValue,
+  useTransform,
+  AnimatePresence,
+  useScroll,
+  useSpring,
+} from "framer-motion";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
