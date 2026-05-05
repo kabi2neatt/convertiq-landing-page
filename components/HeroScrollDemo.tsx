@@ -354,7 +354,7 @@ function MobileHeroScroll() {
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end start"],
+    offset: ["start start", "end end"],
   });
 
   const progress = useSpring(scrollYProgress, {
@@ -367,8 +367,9 @@ function MobileHeroScroll() {
     <section
       id="home"
       ref={ref}
-      className="relative h-[300svh] bg-black text-white"
+      className="relative h-[320svh] bg-black text-white"
     >
+      {/* Sticky container = locks user visually */}
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <HeroContent progress={progress} />
       </div>
