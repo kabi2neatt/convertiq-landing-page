@@ -6,7 +6,6 @@ import {
   motion,
   MotionValue,
   useMotionValue,
-  useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -76,7 +75,7 @@ function TallyModal({
         <motion.div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 p-4 backdrop-blur-xl"
+          className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/85 p-4 backdrop-blur-xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -84,7 +83,7 @@ function TallyModal({
           <button
             type="button"
             onClick={onClose}
-            className="fixed bottom-6 left-1/2 z-[100000] -translate-x-1/2 rounded-full bg-white px-8 py-4 text-sm font-black text-black shadow-[0_10px_50px_rgba(0,0,0,0.65)] transition hover:scale-105"
+            className="fixed bottom-6 left-1/2 z-[10000000] -translate-x-1/2 rounded-full bg-white px-8 py-4 text-sm font-black text-black shadow-[0_10px_50px_rgba(0,0,0,0.65)] transition hover:scale-105"
           >
             Close Form
           </button>
@@ -167,33 +166,26 @@ function HeroButton({
   );
 }
 
-function MobileNav({
-  progress,
-  onDemo,
-  onAudit,
-}: {
-  progress: MotionValue<number>;
-  onDemo: () => void;
-  onAudit: () => void;
-}) {
+function FixedMobileNavbar() {
   const [open, setOpen] = useState(false);
 
-  const opacity = useTransform(progress, [0, 0.08, 1], [1, 1, 0.96]);
-  const y = useTransform(progress, [0, 1], [0, -2]);
+  const openForm = (type: "demo" | "audit") => {
+    setOpen(false);
+    window.dispatchEvent(
+      new CustomEvent("open-convertiq-form", { detail: { type } })
+    );
+  };
 
   const close = () => setOpen(false);
 
   return (
-    <motion.div
-      style={{ opacity, y }}
-      className="absolute left-3 right-3 top-[calc(env(safe-area-inset-top)+0.85rem)] z-[999] md:hidden"
-    >
+    <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top)+0.85rem)] z-[999999] md:hidden">
       <div className="flex items-center justify-between gap-2">
         <a href="#home" onClick={close} className="shrink-0">
           <img
             src="/convertiqmedia.png"
             alt="ConvertIQ Media"
-            className="h-14 w-14 bg-white object-contain p-1"
+            className="h-14 w-14 bg-white object-contain p-1 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
           />
         </a>
 
@@ -201,7 +193,7 @@ function MobileNav({
           <a
             href="#home"
             onClick={close}
-            className="rounded-xl border border-white/10 bg-black/45 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+            className="rounded-xl border border-white/10 bg-black/75 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
           >
             Home
           </a>
@@ -209,7 +201,7 @@ function MobileNav({
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
-            className="rounded-xl border border-white/10 bg-black/45 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+            className="rounded-xl border border-white/10 bg-black/75 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
           >
             Navigation ↓
           </button>
@@ -232,7 +224,7 @@ function MobileNav({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.96 }}
             transition={{ duration: 0.18 }}
-            className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-black/90 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.65)] backdrop-blur-xl"
+            className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)] backdrop-blur-xl"
           >
             <a
               href="#services"
@@ -268,10 +260,7 @@ function MobileNav({
 
             <button
               type="button"
-              onClick={() => {
-                close();
-                onDemo();
-              }}
+              onClick={() => openForm("demo")}
               className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
             >
               Free Website Demo
@@ -279,10 +268,7 @@ function MobileNav({
 
             <button
               type="button"
-              onClick={() => {
-                close();
-                onAudit();
-              }}
+              onClick={() => openForm("audit")}
               className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
             >
               Free Google Ads Audit
@@ -290,7 +276,7 @@ function MobileNav({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }
 
@@ -450,12 +436,6 @@ function HeroContent({
           animate={{ left: `${mouse.x}%`, top: `${mouse.y}%` }}
           transition={{ type: "spring", stiffness: 70, damping: 24 }}
           className="pointer-events-none absolute z-10 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/12 blur-[80px] md:h-[360px] md:w-[360px] md:blur-[100px]"
-        />
-
-        <MobileNav
-          progress={progress}
-          onDemo={() => setActiveForm("demo")}
-          onAudit={() => setActiveForm("audit")}
         />
 
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 pt-28 text-center md:px-6 md:pt-0">
@@ -665,6 +645,7 @@ function MobileHeroScroll() {
 
   return (
     <section id="home" className="relative h-[100svh] overflow-hidden bg-black text-white">
+      <FixedMobileNavbar />
       <HeroContent progress={progress} isMobile />
     </section>
   );
