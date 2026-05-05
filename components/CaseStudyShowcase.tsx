@@ -89,7 +89,7 @@ function AnimatedChart({ progress }: { progress: MotionValue<number> }) {
 }
 
 export function CaseStudyShowcase() {
-  const { ref, progress, lockProps } = useLockedSectionProgress({ speed: 0.00112 });
+  const { ref, progress, } = useLockedSectionProgress({ speed: 0.00112 });
 
   const headingY = useTransform(progress, [0, 0.09], [50, 0]);
   const headingScale = useTransform(progress, [0, 0.09], [0.96, 1]);
@@ -101,7 +101,7 @@ export function CaseStudyShowcase() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="case-study" ref={ref as React.RefObject<HTMLElement>} {...lockProps} className="relative h-screen bg-black text-white">
+    <section id="case-study" ref={ref as React.RefObject<HTMLElement>} className="relative h-screen bg-black text-white">
       <div className="h-screen overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.22),transparent_32%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_34%)]" />
         <motion.div style={{ x: glowX }} className="pointer-events-none absolute top-0 h-full w-[35vw] -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent blur-xl" />
