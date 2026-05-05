@@ -89,7 +89,7 @@ function AnimatedChart({ progress }: { progress: MotionValue<number> }) {
 }
 
 export function CaseStudyShowcase() {
-  const { ref, progress, } = useLockedSectionProgress({ speed: 0.00112 });
+  const { ref, progress } = useLockedSectionProgress({ speed: 0.00112 });
 
   const headingY = useTransform(progress, [0, 0.09], [50, 0]);
   const headingScale = useTransform(progress, [0, 0.09], [0.96, 1]);
@@ -102,11 +102,11 @@ export function CaseStudyShowcase() {
 
   return (
     <section id="case-study" ref={ref as React.RefObject<HTMLElement>} className="relative min-h-screen bg-black text-white">
-      <div className="h-screen overflow-visible">
+      <div className="min-h-screen overflow-visible">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.22),transparent_32%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_34%)]" />
         <motion.div style={{ x: glowX }} className="pointer-events-none absolute top-0 h-full w-[35vw] -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent blur-xl" />
 
-        <div className="relative mx-auto flex h-screen max-w-7xl flex-col justify-center px-4 pb-5 pt-20 md:px-6 md:pb-7 md:pt-24">
+        <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-4 pb-16 pt-24 md:px-6 md:pb-20 md:pt-28">
           <motion.div style={{ y: headingY, scale: headingScale, opacity: headingOpacity }} className="mx-auto max-w-4xl text-center">
             <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-400/25 bg-white/[0.04] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-blue-200 md:mb-3 md:px-4 md:py-2 md:text-[10px] md:tracking-[0.28em]">
               <Sparkles size={12} />
@@ -120,7 +120,7 @@ export function CaseStudyShowcase() {
             </p>
           </motion.div>
 
-          <motion.div style={{ y: mainY, scale: mainScale, rotateX: mainRotate, transformStyle: "preserve-3d" }} className="mt-4 grid gap-4 lg:grid-cols-[1.35fr_0.9fr] md:mt-6 md:gap-5">
+          <motion.div style={{ y: mainY, scale: mainScale, rotateX: mainRotate, transformStyle: "preserve-3d" }} className="mt-6 grid gap-4 lg:grid-cols-[1.35fr_0.9fr] md:mt-8 md:gap-5">
             <div className="relative overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#10131b]/95 p-4 shadow-[0_40px_160px_rgba(37,99,235,0.2)] backdrop-blur-xl md:rounded-[1.75rem] md:p-6">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.2),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.14),transparent_36%)]" />
               <div className="relative">
@@ -145,6 +145,7 @@ export function CaseStudyShowcase() {
                 </div>
               </div>
             </div>
+
             <div className="relative hidden overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#10131b]/95 p-5 shadow-[0_40px_160px_rgba(168,85,247,0.14)] backdrop-blur-xl md:block">
               <AnimatedChart progress={progress} />
               <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.045] p-4">
@@ -156,11 +157,11 @@ export function CaseStudyShowcase() {
             </div>
           </motion.div>
 
-          <div className="mt-3 grid grid-cols-4 gap-2 md:hidden">
+          <div className="mt-4 grid grid-cols-4 gap-2 md:hidden">
             {stats.map((stat, index) => <StatTile key={stat.label} stat={stat} index={index} progress={progress} />)}
           </div>
 
-          <div className="mt-4 hidden gap-4 md:grid md:grid-cols-3">
+          <div className="mt-5 hidden gap-4 md:grid md:grid-cols-3">
             {storyCards.map((card, index) => {
               const Icon = card.icon;
               return (
@@ -179,7 +180,7 @@ export function CaseStudyShowcase() {
             })}
           </div>
 
-          <div className="mx-auto mt-3 h-1.5 w-full max-w-4xl overflow-hidden rounded-full bg-white/10 md:mt-4">
+          <div className="mx-auto mt-5 h-1.5 w-full max-w-4xl overflow-hidden rounded-full bg-white/10 md:mt-6">
             <motion.div style={{ width: progressWidth }} className="h-full rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-fuchsia-400" />
           </div>
         </div>
