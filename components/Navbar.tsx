@@ -16,6 +16,8 @@ import {
   FileText,
 } from "lucide-react";
 
+const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
+
 function MagneticButton({
   children,
   className = "",
@@ -32,7 +34,7 @@ function MagneticButton({
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
 
-    ref.current.style.transform = `translate(${x * 0.18}px, ${y * 0.18}px)`;
+    ref.current.style.transform = `translate(${x * 0.14}px, ${y * 0.14}px)`;
   };
 
   const handleMouseLeave = () => {
@@ -46,6 +48,7 @@ function MagneticButton({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       whileHover={{ scale: 1.04 }}
+      whileTap={{ scale: 0.97 }}
       transition={{ type: "spring", stiffness: 240, damping: 18 }}
       className={className}
     >
@@ -77,37 +80,25 @@ export function Navbar() {
       desc: "How we turn traffic into booked jobs.",
     },
     {
+      href: "#case-study",
+      icon: BarChart3,
+      title: "Case Study",
+      desc: "See how wasted spend becomes qualified leads.",
+    },
+    {
       href: "#why-us",
       icon: ShieldCheck,
       title: "Why Us?",
       desc: "Why ConvertIQ is built for local lead gen.",
     },
     {
-      href: "#book-audit",
-      icon: ClipboardCheck,
-      title: "Book Free Audit",
-      desc: "Get a free ads and funnel review.",
-    },
-    {
-      href: "#quick-audit",
-      icon: Zap,
-      title: "Quick Audit",
-      desc: "Fast website and lead-flow check.",
-    },
-    {
-      href: "#website-demo",
-      icon: BarChart3,
-      title: "Website Demo",
-      desc: "Request a free personalized demo site.",
-    },
-    {
       href: "#faq",
       icon: HelpCircle,
-      title: "FAQ's",
+      title: "FAQ",
       desc: "Common questions before booking.",
     },
     {
-      href: "#privacy-policy",
+      href: "/privacy-policy",
       icon: FileText,
       title: "Privacy Policy",
       desc: "How submitted information is handled.",
@@ -115,8 +106,8 @@ export function Navbar() {
   ];
 
   return (
-    <header className="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-black/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-30 max-w-7xl items-center justify-between px-8">
+    <header className="fixed left-0 top-0 z-[1000] w-full border-b border-white/10 bg-black/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-5 md:px-10">
         <Link href="/" className="flex items-center">
           <motion.div
             className="relative"
@@ -139,15 +130,15 @@ export function Navbar() {
             <Image
               src="/convertiqmedia.png"
               alt="ConvertIQ Media"
-              width={180}
-              height={40}
-              className="relative z-10 h-30 w-auto object-contain"
+              width={160}
+              height={70}
+              className="relative z-10 h-[64px] w-auto object-contain"
               priority
             />
           </motion.div>
         </Link>
 
-        <nav className="hidden items-center gap-7 text-sm font-semibold text-white md:flex">
+        <nav className="hidden items-center gap-8 text-[15px] font-semibold text-white md:flex">
           <Link href="#home" className="transition hover:text-purple-300">
             Home
           </Link>
@@ -157,7 +148,7 @@ export function Navbar() {
             onMouseEnter={() => setOpen(true)}
             onMouseLeave={() => setOpen(false)}
           >
-            <button className="flex items-center gap-2 transition hover:text-purple-300">
+            <button className="flex items-center gap-2 text-[15px] font-semibold transition hover:text-purple-300">
               Navigation
               <motion.span animate={{ rotate: open ? 180 : 0 }}>⌄</motion.span>
             </button>
@@ -184,12 +175,12 @@ export function Navbar() {
                           className="group rounded-2xl border border-white/5 bg-white/[0.035] p-4 transition hover:border-purple-400/40 hover:bg-white/[0.07]"
                         >
                           <div className="flex gap-3">
-                            <div className="flex h-15 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600/30 to-purple-600/30 text-purple-200 ring-1 ring-white/10 transition group-hover:scale-105">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600/30 to-purple-600/30 text-purple-200 ring-1 ring-white/10 transition group-hover:scale-105">
                               <Icon size={18} />
                             </div>
 
                             <div>
-                              <div className="font-bold text-white">
+                              <div className="text-[14px] font-bold text-white">
                                 {item.title}
                               </div>
                               <p className="mt-1 text-xs leading-5 text-white/55">
@@ -207,7 +198,7 @@ export function Navbar() {
                       Want us to review your funnel?
                     </div>
                     <p className="mt-1 text-xs text-white/55">
-                      Get a free audit and see exactly where leads are being
+                      Book a free call and we’ll show you where leads are being
                       lost.
                     </p>
                   </div>
@@ -217,31 +208,58 @@ export function Navbar() {
           </div>
 
           <MagneticButton>
-            <Link
-              href="#website-demo"
-              className="block rounded-md bg-[#1600b8] px-8 py-5 text-sm font-bold text-white shadow-[0_0_28px_rgba(37,99,235,0.25)]"
+            <button
+              type="button"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("open-convertiq-form", {
+                    detail: { type: "demo" },
+                  })
+                );
+              }}
+              className="block rounded-xl bg-[#1600b8] px-7 py-3 text-[14px] font-semibold text-white shadow-[0_0_30px_rgba(37,99,235,0.3)] transition hover:bg-blue-700"
             >
               Get A Free Demo
-            </Link>
+            </button>
           </MagneticButton>
 
           <MagneticButton>
-            <Link
-              href="#book-audit"
-              className="block rounded-md bg-[#8b45d9] px-8 py-5 text-sm font-bold text-white shadow-[0_0_28px_rgba(168,85,247,0.25)]"
+            <button
+              type="button"
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent("open-convertiq-form", {
+                    detail: { type: "audit" },
+                  })
+                );
+              }}
+              className="block rounded-xl bg-[#8b45d9] px-7 py-3 text-[14px] font-semibold text-white shadow-[0_0_30px_rgba(168,85,247,0.3)] transition hover:bg-purple-500"
             >
               Free Google Ads Audit
-            </Link>
+            </button>
+          </MagneticButton>
+
+          <MagneticButton>
+            <a
+              href={CALENDLY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-xl bg-[#38bdf8] px-7 py-3 text-[14px] font-semibold text-black shadow-[0_0_30px_rgba(56,189,248,0.35)] transition hover:bg-sky-300"
+            >
+              Book Call
+            </a>
           </MagneticButton>
         </nav>
 
         <MagneticButton className="md:hidden">
-          <Link
-            href="#website-demo"
-            className="block rounded-md bg-[#1600b8] px-4 py-2 text-xs font-bold text-white"
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block rounded-lg bg-[#38bdf8] px-5 py-2.5 text-[13px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
           >
-            Free Demo
-          </Link>
+            Book Call
+          </a>
         </MagneticButton>
       </div>
     </header>
