@@ -524,7 +524,7 @@ export function HeroScrollDemo() {
   return (
     <section id="home" className="relative overflow-hidden bg-black text-white">
       <ContainerScroll>
-       {(progress) => <HeroContent progress={progress} />}
+      {(progress) => <HeroContent progress={progress} isMobile={false} />}
       </ContainerScroll>
     </section>
   );
