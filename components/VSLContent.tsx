@@ -162,7 +162,7 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
 
-<<<<<<< HEAD
+
   // Background motion inside the hero frame
   const bgScale = useTransform(progress, [0, 1], [1.04, 1.14]);
   const bgY = useTransform(progress, [0, 1], [12, -30]);
@@ -207,10 +207,7 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
   const togglePlay = () => {
     const v = videoRef.current;
     if (!v) return;
-<<<<<<< HEAD
 
-=======
->>>>>>> f71fc9d (updated CaseStudy)
     if (v.paused) {
       void v.play();
       setIsPlaying(true);
@@ -223,17 +220,14 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
-<<<<<<< HEAD
-
-=======
->>>>>>> f71fc9d (updated CaseStudy)
+  
     v.muted = !v.muted;
     setIsMuted(v.muted);
   };
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-2xl">
-<<<<<<< HEAD
+
       <motion.div
         style={{ y: bgY, scale: bgScale }}
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_24%_24%,rgba(124,58,237,0.4),transparent_48%),radial-gradient(circle_at_72%_78%,rgba(37,99,235,0.33),transparent_52%),linear-gradient(180deg,#0a0a12_0%,#05050a_100%)]"
@@ -354,7 +348,7 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                   type="button"
                   onClick={togglePlay}
                   aria-label="Play video"
-<<<<<<< HEAD
+
                   className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-b from-black/34 via-black/12 to-black/62 backdrop-blur-[1px] transition"
                 >
                   <motion.div
@@ -375,7 +369,7 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                     className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white text-black shadow-[0_0_50px_rgba(255,255,255,0.5)] md:h-20 md:w-20"
                   >
                     <span className="absolute inset-0 animate-ping rounded-full bg-white/25" />
-=======
+
                   className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-b from-black/30 via-black/15 to-black/55 backdrop-blur-[1px] transition"
                 >
                   <motion.div
@@ -404,7 +398,7 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                     />
                   </motion.div>
 
-<<<<<<< HEAD
+
                   <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/65 px-3 py-1 text-[9px] font-black uppercase tracking-[0.2em] text-white/95 backdrop-blur md:bottom-5 md:px-4 md:py-1.5 md:text-[11px]">
                     Tap to watch
                   </span>
@@ -412,11 +406,11 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
                   <span className="absolute left-3 top-3 rounded-full border border-white/15 bg-black/55 px-3 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-white/80 backdrop-blur md:left-5 md:top-5 md:text-[10px]">
                     2 min video
                   </span>
-=======
+
                   <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/55 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur md:bottom-5 md:px-4 md:py-1.5 md:text-[11px]">
                     Tap to watch
                   </span>
->>>>>>> f71fc9d (updated CaseStudy)
+  
                 </button>
               )}
 
@@ -445,10 +439,6 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
           </div>
         </motion.div>
 
-<<<<<<< HEAD
-=======
-        {/* CTA */}
->>>>>>> f71fc9d (updated CaseStudy)
         <motion.div
           style={{ opacity: ctaOpacity, y: ctaY }}
           className="mt-4 md:mt-7"
@@ -459,10 +449,7 @@ function HeroFrameContent({ progress }: { progress: MotionValue<number> }) {
           </MagneticCTA>
         </motion.div>
 
-<<<<<<< HEAD
-=======
-        {/* Trust line */}
->>>>>>> f71fc9d (updated CaseStudy)
+  
         <motion.div
           style={{ opacity: trustOpacity, y: trustY }}
           className="mt-3 inline-flex max-w-[330px] flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-2 text-[10.5px] font-bold text-white/80 backdrop-blur-xl md:mt-5 md:max-w-none md:gap-3 md:rounded-full md:px-5 md:py-2.5 md:text-xs"
@@ -605,7 +592,7 @@ function BenefitCard({
 }
 
 function Benefits() {
-<<<<<<< HEAD
+
  const { ref, progress } = useLockedSectionProgress ({speed: 0.00115});
 
   const headingY = useTransform(progress, [0, 0.18], [70, 0]);
