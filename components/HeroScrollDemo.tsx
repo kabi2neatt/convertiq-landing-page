@@ -179,21 +179,32 @@ function FixedMobileNavbar() {
   const close = () => setOpen(false);
 
   return (
-    <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top)+0.85rem)] z-[999999] md:hidden">
-      <div className="flex items-center gap-2">
-        <a href="#home" onClick={close} className="shrink-0">
-          <img
-            src="/convertiqmedia.png"
-            alt="ConvertIQ Media"
-            className="h-14 w-14 bg-white object-contain p-1 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
-          />
-        </a>
+    <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top)+0.75rem)] z-[999999] md:hidden">
+      <div className="rounded-3xl border border-white/10 bg-black/70 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
+        <div className="flex items-center justify-between gap-2">
+          <a href="#home" onClick={close} className="shrink-0">
+            <img
+              src="/convertiqmedia.png"
+              alt="ConvertIQ Media"
+              className="h-12 w-12 rounded-sm bg-white object-contain p-1"
+            />
+          </a>
 
-        <div className="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1.5 overflow-hidden">
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-2xl bg-[#38bdf8] px-5 py-3 text-sm font-black text-black shadow-[0_0_28px_rgba(56,189,248,0.55)]"
+          >
+            Book Call
+          </a>
+        </div>
+
+        <div className="mt-2 grid grid-cols-2 gap-2">
           <a
             href="#home"
             onClick={close}
-            className="shrink-0 rounded-xl border border-white/10 bg-black/75 px-2.5 py-2.5 text-[11px] font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-3 text-center text-sm font-black text-white backdrop-blur-xl"
           >
             Home
           </a>
@@ -201,81 +212,72 @@ function FixedMobileNavbar() {
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
-            className="min-w-0 shrink rounded-xl border border-white/10 bg-black/75 px-2.5 py-2.5 text-[11px] font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-3 text-center text-sm font-black text-white backdrop-blur-xl"
           >
-            <span className="block max-w-[86px] truncate">Navigation ↓</span>
+            Navigation ↓
           </button>
-
-          <a
-            href={CALENDLY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 rounded-xl bg-[#38bdf8] px-3 py-2.5 text-[11px] font-black text-black shadow-[0_0_25px_rgba(56,189,248,0.55)]"
-          >
-            Book
-          </a>
         </div>
+
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ duration: 0.18 }}
+              className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)]"
+            >
+              <a
+                href="#services"
+                onClick={close}
+                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+              >
+                Services
+              </a>
+
+              <a
+                href="#case-study"
+                onClick={close}
+                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+              >
+                Case Study
+              </a>
+
+              <a
+                href="#why-us"
+                onClick={close}
+                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+              >
+                Why ConvertIQ
+              </a>
+
+              <a
+                href="#faq"
+                onClick={close}
+                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+              >
+                FAQ
+              </a>
+
+              <button
+                type="button"
+                onClick={() => openForm("demo")}
+                className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
+              >
+                Free Website Demo
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openForm("audit")}
+                className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
+              >
+                Free Google Ads Audit
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.96 }}
-            transition={{ duration: 0.18 }}
-            className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)] backdrop-blur-xl"
-          >
-            <a
-              href="#services"
-              onClick={close}
-              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-            >
-              Services
-            </a>
-
-            <a
-              href="#case-study"
-              onClick={close}
-              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-            >
-              Case Study
-            </a>
-
-            <a
-              href="#why-us"
-              onClick={close}
-              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-            >
-              Why ConvertIQ
-            </a>
-
-            <a
-              href="#faq"
-              onClick={close}
-              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-            >
-              FAQ
-            </a>
-
-            <button
-              type="button"
-              onClick={() => openForm("demo")}
-              className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
-            >
-              Free Website Demo
-            </button>
-
-            <button
-              type="button"
-              onClick={() => openForm("audit")}
-              className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
-            >
-              Free Google Ads Audit
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
