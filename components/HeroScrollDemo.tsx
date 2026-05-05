@@ -132,7 +132,8 @@ function HeroButton({
 }) {
   const styles = {
     sky: "bg-[#38bdf8] text-black shadow-[0_0_35px_rgba(56,189,248,0.45)] hover:bg-[#7dd3fc]",
-    purple: "bg-[#8b45d9] text-white shadow-[0_0_35px_rgba(168,85,247,0.32)] hover:bg-purple-500",
+    purple:
+      "bg-[#8b45d9] text-white shadow-[0_0_35px_rgba(168,85,247,0.32)] hover:bg-purple-500",
     blue: "bg-[#1600b8] text-white shadow-[0_0_35px_rgba(37,99,235,0.3)] hover:bg-blue-700",
   };
 
@@ -166,6 +167,133 @@ function HeroButton({
   );
 }
 
+function MobileNav({
+  progress,
+  onDemo,
+  onAudit,
+}: {
+  progress: MotionValue<number>;
+  onDemo: () => void;
+  onAudit: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+
+  const opacity = useTransform(progress, [0, 0.08, 1], [1, 1, 0.96]);
+  const y = useTransform(progress, [0, 1], [0, -2]);
+
+  const close = () => setOpen(false);
+
+  return (
+    <motion.div
+      style={{ opacity, y }}
+      className="absolute left-3 right-3 top-[calc(env(safe-area-inset-top)+0.85rem)] z-[999] md:hidden"
+    >
+      <div className="flex items-center justify-between gap-2">
+        <a href="#home" onClick={close} className="shrink-0">
+          <img
+            src="/convertiqmedia.png"
+            alt="ConvertIQ Media"
+            className="h-14 w-14 bg-white object-contain p-1"
+          />
+        </a>
+
+        <div className="flex min-w-0 items-center gap-2">
+          <a
+            href="#home"
+            onClick={close}
+            className="rounded-xl border border-white/10 bg-black/45 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+          >
+            Home
+          </a>
+
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            className="rounded-xl border border-white/10 bg-black/45 px-3 py-3 text-xs font-black text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+          >
+            Navigation ↓
+          </button>
+
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl bg-[#38bdf8] px-4 py-3 text-xs font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.55)]"
+          >
+            Book
+          </a>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.96 }}
+            transition={{ duration: 0.18 }}
+            className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-black/90 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.65)] backdrop-blur-xl"
+          >
+            <a
+              href="#services"
+              onClick={close}
+              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+            >
+              Services
+            </a>
+
+            <a
+              href="#case-study"
+              onClick={close}
+              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+            >
+              Case Study
+            </a>
+
+            <a
+              href="#why-us"
+              onClick={close}
+              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+            >
+              Why ConvertIQ
+            </a>
+
+            <a
+              href="#faq"
+              onClick={close}
+              className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
+            >
+              FAQ
+            </a>
+
+            <button
+              type="button"
+              onClick={() => {
+                close();
+                onDemo();
+              }}
+              className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
+            >
+              Free Website Demo
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                close();
+                onAudit();
+              }}
+              className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
+            >
+              Free Google Ads Audit
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 function HeroContent({
   progress,
   isMobile = false,
@@ -192,76 +320,106 @@ function HeroContent({
   const videoY = useTransform(progress, [0, 1], [18, -70]);
   const videoScale = useTransform(progress, [0, 1], [1.08, 1.28]);
 
-  const mobileNavOpacity = useTransform(progress, [0, 0.08, 1], [1, 1, 0.96]);
-  const mobileNavY = useTransform(progress, [0, 1], [0, -2]);
+  const contentY = useTransform(
+    progress,
+    [0, 0.35, 0.7, 1],
+    isMobile ? [0, -85, -160, -220] : [0, 0, 0, 0]
+  );
 
-const contentY = useTransform(
-  progress,
-  [0, 0.35, 0.7, 1],
-  isMobile ? [0, -85, -160, -220] : [0, 0, 0, 0]
-);
-
-const contentScale = useTransform(
-  progress,
-  [0, 0.45, 1],
-  isMobile ? [1, 0.92, 0.82] : [1, 1, 1]
-);
+  const contentScale = useTransform(
+    progress,
+    [0, 0.45, 1],
+    isMobile ? [1, 0.92, 0.82] : [1, 1, 1]
+  );
 
   const badgeOpacity = useTransform(
     progress,
     [0, 0.25],
     isMobile ? [1, 0.1] : [1, 1]
   );
-  const badgeY = useTransform(progress, [0, 0.25], [0, -24]);
+  const badgeY = useTransform(
+    progress,
+    [0, 0.25],
+    isMobile ? [0, -24] : [0, 0]
+  );
 
- const headlineY = useTransform(
-  progress,
-  [0, 0.5, 1],
-  isMobile ? [0, -20, -50] : [0, 0, 0]
-);
+  const headlineY = useTransform(
+    progress,
+    [0, 0.5, 1],
+    isMobile ? [0, -20, -50] : [0, 0, 0]
+  );
 
-const headlineScale = useTransform(
-  progress,
-  [0, 0.5, 1],
-  isMobile ? [1, 0.96, 0.9] : [1, 1, 1]
-);
+  const headlineScale = useTransform(
+    progress,
+    [0, 0.5, 1],
+    isMobile ? [1, 0.96, 0.9] : [1, 1, 1]
+  );
+
   const headlineOpacity = useTransform(
     progress,
     [0, 1],
-    isMobile ? [1, 0.95] : [1, 1]
+    isMobile ? [1, 0.98] : [1, 1]
   );
 
   const subOpacity = useTransform(
     progress,
     [0.12, 0.3, 0.72],
-    isMobile ? [0, 1, 0.15] : [1, 1, 1]
+    isMobile ? [0, 1, 0.85] : [1, 1, 1]
   );
-  const subY = useTransform(progress, [0.12, 0.3], [26, 0]);
+  const subY = useTransform(
+    progress,
+    [0.12, 0.3],
+    isMobile ? [26, 0] : [0, 0]
+  );
 
   const ctaOpacity = useTransform(
     progress,
     [0.28, 0.48, 0.82],
-    isMobile ? [0, 1, 0.2] : [1, 1, 1]
+    isMobile ? [0, 1, 0.9] : [1, 1, 1]
   );
-  const ctaY = useTransform(progress, [0.28, 0.48], [30, 0]);
+  const ctaY = useTransform(
+    progress,
+    [0.28, 0.48],
+    isMobile ? [30, 0] : [0, 0]
+  );
 
   const trustOpacity = useTransform(
     progress,
     [0.5, 0.68, 0.9],
-    isMobile ? [0, 1, 0.1] : [1, 1, 1]
+    isMobile ? [0, 1, 0.85] : [1, 1, 1]
   );
-  const trustY = useTransform(progress, [0.5, 0.68], [24, 0]);
+  const trustY = useTransform(
+    progress,
+    [0.5, 0.68],
+    isMobile ? [24, 0] : [0, 0]
+  );
 
-  const systemCardOpacity = useTransform(progress, [0.62, 0.82], [0, 1]);
-  const systemCardY = useTransform(progress, [0.62, 0.82], [70, 0]);
-  const systemCardScale = useTransform(progress, [0.62, 0.82], [0.9, 1]);
+  const systemCardOpacity = useTransform(
+    progress,
+    [0.62, 0.82],
+    isMobile ? [0, 1] : [0, 0]
+  );
+  const systemCardY = useTransform(
+    progress,
+    [0.62, 0.82],
+    isMobile ? [70, 0] : [70, 70]
+  );
+  const systemCardScale = useTransform(
+    progress,
+    [0.62, 0.82],
+    isMobile ? [0.9, 1] : [0.9, 0.9]
+  );
 
   const logoOpacity = useTransform(
     progress,
     [0.82, 1],
     isMobile ? [0, 1] : [1, 1]
   );
-  const logoY = useTransform(progress, [0.82, 1], [40, 0]);
+  const logoY = useTransform(
+    progress,
+    [0.82, 1],
+    isMobile ? [40, 0] : [0, 0]
+  );
 
   return (
     <>
@@ -285,8 +443,8 @@ const headlineScale = useTransform(
           playsInline
         />
 
-        <div className="absolute inset-0 bg-black/28 md:bg-black/35" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.08),rgba(0,0,0,0.62)_48%,rgba(0,0,0,0.9))]" />
+        <div className="absolute inset-0 bg-black/20 md:bg-black/35" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.08),rgba(0,0,0,0.52)_48%,rgba(0,0,0,0.86))]" />
 
         <motion.div
           animate={{ left: `${mouse.x}%`, top: `${mouse.y}%` }}
@@ -294,25 +452,11 @@ const headlineScale = useTransform(
           className="pointer-events-none absolute z-10 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/12 blur-[80px] md:h-[360px] md:w-[360px] md:blur-[100px]"
         />
 
-        <motion.div
-          style={{ opacity: mobileNavOpacity, y: mobileNavY }}
-          className="absolute left-4 right-4 top-5 z-40 flex items-center justify-between md:hidden"
-        >
-          <img
-            src="/convertiqmedia.png"
-            alt="ConvertIQ Media"
-            className="h-14 w-14 bg-white object-contain p-1"
-          />
-
-          <a
-            href={CALENDLY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-xl bg-[#38bdf8] px-5 py-3 text-sm font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.5)]"
-          >
-            Book Call
-          </a>
-        </motion.div>
+        <MobileNav
+          progress={progress}
+          onDemo={() => setActiveForm("demo")}
+          onAudit={() => setActiveForm("audit")}
+        />
 
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4 pt-28 text-center md:px-6 md:pt-0">
           <motion.div
@@ -328,7 +472,7 @@ const headlineScale = useTransform(
 
             <motion.h1
               style={{ y: headlineY, scale: headlineScale, opacity: headlineOpacity }}
-              className="max-w-5xl text-[2rem] font-black leading-[0.94] tracking-[-0.065em] text-white drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)] min-[390px]:text-[2.18rem] md:text-6xl md:leading-[0.95] lg:text-7xl"
+              className="max-w-5xl text-[2rem] font-black leading-[0.94] tracking-[-0.065em] text-white brightness-110 drop-shadow-[0_6px_28px_rgba(0,0,0,0.75)] min-[390px]:text-[2.18rem] md:text-6xl md:leading-[0.95] lg:text-7xl"
             >
               Generate More Calls &<br />
               Booked Jobs — With<br />
@@ -376,7 +520,11 @@ const headlineScale = useTransform(
           </motion.div>
 
           <motion.div
-            style={{ opacity: systemCardOpacity, y: systemCardY, scale: systemCardScale }}
+            style={{
+              opacity: systemCardOpacity,
+              y: systemCardY,
+              scale: systemCardScale,
+            }}
             className="absolute bottom-28 left-4 right-4 z-30 rounded-3xl border border-white/10 bg-black/45 p-4 text-left text-white shadow-[0_30px_120px_rgba(37,99,235,0.28)] backdrop-blur-xl md:hidden"
           >
             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-blue-200">
@@ -386,7 +534,8 @@ const headlineScale = useTransform(
               Website + Ads + Tracking = Booked Jobs
             </h3>
             <p className="mt-2 text-xs font-medium leading-6 text-white/72">
-              Scroll through the hero to see the offer, proof, and client logos reveal before the page releases.
+              Scroll through the hero to see the offer, proof, and client logos
+              reveal before the page releases.
             </p>
           </motion.div>
 
@@ -516,24 +665,7 @@ function MobileHeroScroll() {
 
   return (
     <section id="home" className="relative h-[100svh] overflow-hidden bg-black text-white">
-      <div className="absolute left-4 right-4 top-[calc(env(safe-area-inset-top)+1rem)] z-[999] flex items-center justify-between md:hidden">
-        <img
-          src="/convertiqmedia.png"
-          alt="ConvertIQ Media"
-          className="h-16 w-16 bg-white object-contain p-1"
-        />
-
-        <a
-          href={CALENDLY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-xl bg-[#38bdf8] px-6 py-4 text-base font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.55)]"
-        >
-          Book Call
-        </a>
-      </div>
-
-     <HeroContent progress={progress} isMobile />
+      <HeroContent progress={progress} isMobile />
     </section>
   );
 }
@@ -548,7 +680,7 @@ export function HeroScrollDemo() {
   return (
     <section id="home" className="relative overflow-hidden bg-black text-white">
       <ContainerScroll>
-      {(progress) => <HeroContent progress={progress} isMobile={false} />}
+        {(progress) => <HeroContent progress={progress} isMobile={false} />}
       </ContainerScroll>
     </section>
   );
