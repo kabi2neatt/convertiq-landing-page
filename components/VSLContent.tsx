@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { motion, MotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, MotionValue, useInView, useScroll, useSpring, useTransform } from "framer-motion";
 import {
   ArrowRight,
   BarChart3,
@@ -130,6 +130,44 @@ const finalCtaChecks = [
   "No-pressure strategy call",
   "Clear next steps before you spend more on ads",
 ];
+
+function AnimatedCounter({
+  value,
+  prefix = "",
+  suffix = "",
+}: {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    let frame = 0;
+    const totalFrames = 56;
+    const timer = window.setInterval(() => {
+      frame += 1;
+      const progress = 1 - Math.pow(1 - frame / totalFrames, 3);
+      setDisplay(Math.round(value * progress));
+
+      if (frame >= totalFrames) window.clearInterval(timer);
+    }, 18);
+
+    return () => window.clearInterval(timer);
+  }, [isInView, value]);
+
+  return (
+    <span ref={ref}>
+      {prefix}
+      {display}
+      {suffix}
+    </span>
+  );
+}
 
 type CTAVariant = "sky" | "purple" | "blue";
 
@@ -483,9 +521,9 @@ function CaseStudy() {
   const lineWidth = useTransform(progress, [0.32, 0.72], ["0%", "100%"]);
 
   const metrics = [
-    { value: "32+", label: "qualified leads generated", detail: "within the first campaign cycle" },
-    { value: "$90", label: "approx. cost per lead", detail: "after campaign restructure" },
-    { value: "47%", label: "better page engagement", detail: "from faster landing-page flow" },
+    { value: 32, prefix: "", suffix: "+", label: "qualified leads generated", detail: "within the first campaign cycle" },
+    { value: 90, prefix: "$", suffix: "", label: "approx. cost per lead", detail: "after campaign restructure" },
+    { value: 47, prefix: "", suffix: "%", label: "better page engagement", detail: "from faster landing-page flow" },
   ];
 
   return (
@@ -541,7 +579,9 @@ function CaseStudy() {
                   style={{ opacity: useTransform(progress, [0.28 + i * 0.08, 0.46 + i * 0.08], [0, 1]), y: useTransform(progress, [0.28 + i * 0.08, 0.46 + i * 0.08], [50, 0]) }}
                   className="rounded-2xl border border-white/10 bg-black/24 p-4"
                 >
-                  <div className="text-3xl font-black tracking-[-0.06em] text-white md:text-4xl">{metric.value}</div>
+                  <div className="text-3xl font-black tracking-[-0.06em] text-white md:text-4xl">
+                    <AnimatedCounter value={metric.value} prefix={metric.prefix} suffix={metric.suffix} />
+                  </div>
                   <div className="mt-1 text-[12px] font-black leading-4 text-sky-100">{metric.label}</div>
                   <div className="mt-2 text-[11px] leading-5 text-white/50">{metric.detail}</div>
                 </motion.div>
@@ -559,6 +599,102 @@ function CaseStudy() {
                 </div>
               ))}
             </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function ProjectPreview() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 24, mass: 0.45 });
+
+  const headingOpacity = useTransform(progress, [0.04, 0.18], [0, 1]);
+  const headingY = useTransform(progress, [0.04, 0.18], [70, 0]);
+  const previewY = useTransform(progress, [0.18, 0.45], [90, 0]);
+  const previewOpacity = useTransform(progress, [0.18, 0.38], [0, 1]);
+  const glowScale = useTransform(progress, [0.15, 0.6], [0.85, 1.08]);
+
+  return (
+    <section ref={sectionRef} className="relative overflow-hidden border-t border-white/10 bg-black px-4 py-20 text-white md:px-6 md:py-28">
+      <motion.div style={{ scale: glowScale }} className="pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/12 blur-[120px]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.13),transparent_36%),radial-gradient(circle_at_82%_72%,rgba(168,85,247,0.16),transparent_40%)]" />
+
+      <div className="relative mx-auto max-w-7xl">
+        <motion.div style={{ opacity: headingOpacity, y: headingY }} className="mx-auto max-w-3xl text-center">
+          <div className="mb-4 inline-flex rounded-full border border-sky-400/25 bg-white/[0.04] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.28em] text-sky-200 md:text-xs">
+            Client website preview
+          </div>
+          <h2 className="text-[1.9rem] font-black leading-[0.95] tracking-[-0.06em] md:text-6xl">
+            A real project built to make the business look premium and generate leads.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65 md:mt-6 md:text-base md:leading-8">
+            Mr. Gutter Services was built around a clean mobile experience, trust-focused sections, service clarity, gallery proof, and simple contact paths for quote requests.
+          </p>
+        </motion.div>
+
+        <motion.div style={{ opacity: previewOpacity, y: previewY }} className="mt-10 grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-8">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-3 shadow-[0_35px_120px_rgba(59,130,246,0.18)] backdrop-blur-xl md:p-4">
+            <div className="mb-3 flex items-center gap-2 rounded-2xl border border-white/10 bg-black/35 px-3 py-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+              <span className="h-2.5 w-2.5 rounded-full bg-yellow-300" />
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+              <span className="ml-2 truncate text-[11px] font-bold text-white/45">mrgutterservices.ca</span>
+            </div>
+
+            <a href="https://mrgutterservices.ca" target="_blank" rel="noopener noreferrer" className="group block overflow-hidden rounded-[1.4rem] border border-white/10 bg-gradient-to-br from-zinc-950 via-black to-zinc-900">
+              <div className="relative min-h-[360px] p-5 md:min-h-[460px] md:p-8">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.18),transparent_32%),radial-gradient(circle_at_80%_65%,rgba(168,85,247,0.16),transparent_34%)]" />
+                <div className="relative flex h-full min-h-[320px] flex-col justify-between md:min-h-[400px]">
+                  <div>
+                    <div className="mb-4 inline-flex rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-black uppercase tracking-[0.22em] text-white/60">Website Demo</div>
+                    <h3 className="max-w-xl text-3xl font-black leading-[0.95] tracking-[-0.06em] text-white md:text-5xl">
+                      Mr. Gutter Services
+                    </h3>
+                    <p className="mt-4 max-w-lg text-sm leading-7 text-white/62 md:text-base">
+                      Modern dark-themed service website with mobile-first sections, gallery proof, testimonials, and direct quote CTAs.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {["Fast mobile UX", "Trust-focused layout", "Quote-ready CTAs"].map((item) => (
+                      <div key={item} className="rounded-2xl border border-white/10 bg-white/[0.055] p-3 text-[12px] font-bold text-white/70 backdrop-blur">
+                        <CheckCircle2 size={15} className="mb-2 text-emerald-300" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div className="space-y-4">
+            <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-xl md:p-7">
+              <h3 className="text-2xl font-black tracking-[-0.05em] md:text-3xl">What this preview proves</h3>
+              <p className="mt-3 text-sm leading-7 text-white/65 md:text-base md:leading-8">
+                Instead of pitching abstract marketing, this shows prospects what a real finished website can look like — clean, credible, fast, and built for conversion.
+              </p>
+              <div className="mt-5 grid gap-3">
+                {[
+                  "Makes the business look more established instantly",
+                  "Gives paid traffic a stronger destination",
+                  "Improves trust before the visitor calls or submits a form",
+                  "Creates a clear reason to book a strategy call",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/24 p-3 text-sm font-semibold leading-6 text-white/72">
+                    <CheckCircle2 size={16} className="mt-1 shrink-0 text-sky-300" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <MagneticCTA href="https://mrgutterservices.ca" variant="blue" className="w-full">
+              View Mr. Gutter Website <ArrowRight size={17} />
+            </MagneticCTA>
           </div>
         </motion.div>
       </div>
@@ -589,6 +725,31 @@ function FinalCTA() {
   );
 }
 
+function StickyMobileCTA() {
+  return (
+    <motion.div
+      initial={{ y: 120, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.9, duration: 0.45, ease: "easeOut" }}
+      className="fixed inset-x-0 bottom-0 z-[70] border-t border-white/10 bg-black/78 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 shadow-[0_-20px_60px_rgba(59,130,246,0.18)] backdrop-blur-xl md:hidden"
+    >
+      <a
+        href={TYPEFORM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#38bdf8] px-5 py-4 text-[13px] font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.45)]"
+      >
+        Apply & Book Strategy Call
+        <CalendarDays size={17} />
+      </a>
+      <div className="mt-2 flex items-center justify-center gap-1.5 text-[10px] font-bold text-white/45">
+        <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
+        Free review. No pressure.
+      </div>
+    </motion.div>
+  );
+}
+
 function PageScrollBar() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 25, mass: 0.4 });
@@ -607,11 +768,13 @@ export function VSLContent() {
   return (
     <div className="relative bg-black text-white">
       <PageScrollBar />
+      <StickyMobileCTA />
       <Hero />
       <TrustedBy />
       <Benefits />
       <Testimonials />
       <CaseStudy />
+      <ProjectPreview />
       <FinalCTA />
     </div>
   );
