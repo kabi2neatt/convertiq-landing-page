@@ -320,11 +320,19 @@ function SquareVSLVideo() {
     v.muted = true;
     v.defaultMuted = true;
 
-    const timer = window.setTimeout(() => {
+    const playTimer = window.setTimeout(() => {
       void attemptPlay();
     }, 250);
 
-    return () => window.clearTimeout(timer);
+    const loadFallbackTimer = window.setTimeout(() => {
+      setHasLoaded(true);
+      setNeedsTapToStart(true);
+    }, 1800);
+
+    return () => {
+      window.clearTimeout(playTimer);
+      window.clearTimeout(loadFallbackTimer);
+    };
   }, []);
 
   const togglePlay = async () => {
@@ -388,6 +396,10 @@ function SquareVSLVideo() {
             loop
             controls={false}
             preload="auto"
+            onLoadedMetadata={() => {
+              setHasLoaded(true);
+              void attemptPlay();
+            }}
             onCanPlay={() => {
               setHasLoaded(true);
               void attemptPlay();
