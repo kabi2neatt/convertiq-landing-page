@@ -364,7 +364,12 @@ function SquareVSLVideo() {
         <div className="relative -square w-full">
           <video
             ref={videoRef}
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover object-top brightness-[1.03] contrast-[1.06] saturate-[1.04]"
+             style={{
+    transform: "translateY(-3%)",
+    filter: "contrast(1.05) saturate(1.05) brightness(1.02)",
+    imageRendering: "auto",
+  }}
             src={VIDEO_SRC}
             autoPlay
             muted
