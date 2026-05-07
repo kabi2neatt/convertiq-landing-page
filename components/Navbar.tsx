@@ -252,11 +252,18 @@ export function Navbar() {
         </nav>
 
         <div className="flex min-w-0 items-center gap-2 md:hidden">
+          <a
+            href="#home"
+            className="rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+          >
+            Home
+          </a>
+
           <div className="relative flex min-w-0 flex-1 justify-center">
             <button
               type="button"
               onClick={() => setOpen((prev) => !prev)}
-              className="max-w-[150px] truncate rounded-xl border border-white/10 bg-white/[0.08] px-4 py-2.5 text-[13px] font-semibold text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+              className="max-w-[128px] truncate rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
             >
               Navigation ↓
             </button>
@@ -334,9 +341,9 @@ export function Navbar() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 rounded-xl bg-[#38bdf8] px-4 py-2.5 text-[13px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+            className="shrink-0 rounded-xl bg-[#38bdf8] px-3 py-2.5 text-[12px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
           >
-            Book Call
+            Book
           </a>
         </div>
       </div>
