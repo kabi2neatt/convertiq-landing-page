@@ -296,12 +296,12 @@ function SquareVSLVideo() {
       {/* Main Frame */}
       <div className="relative overflow-hidden rounded-[1.7rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2.2rem]">
         
-        <div className="relative aspect-[9/18] w-full overflow-hidden md:aspect-[9/16.5]">
+        <div className="relative aspect-[9/17] w-full overflow-hidden md:aspect-[9/15]">
           
           {/* Wistia Video */}
           <iframe
             title="ConvertIQ VSL"
-            src="https://fast.wistia.net/embed/iframe/48i7dt9tre?seo=false&videoFoam=true&playsinline=1&controlsVisibleOnLoad=true&playbar=true&volumeControl=true&fullscreenButton=true&smallPlayButton=true&playButton=true"
+            src="https://fast.wistia.net/embed/iframe/48i7dt9tre?autoplay=1&muted=1&seo=false&videoFoam=true&playsinline=1&controlsVisibleOnLoad=true&playbar=true&volumeControl=true&fullscreenButton=true&smallPlayButton=true&playButton=true"
             allow="autoplay; fullscreen"
             allowFullScreen
             frameBorder="0"
