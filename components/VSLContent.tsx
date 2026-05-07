@@ -361,10 +361,10 @@ function SquareVSLVideo() {
       <div className="pointer-events-none absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
 
       <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
-        <div className="relative aspect-square w-full">
+        <div className="relative -square w-full">
           <video
             ref={videoRef}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-top"
             src={VIDEO_SRC}
             autoPlay
             muted
