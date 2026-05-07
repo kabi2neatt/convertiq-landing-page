@@ -400,7 +400,6 @@ function SquareVSLVideo() {
             }}
             src={VIDEO_SRC}
             muted
-            defaultMuted
             autoPlay
             playsInline
             loop
