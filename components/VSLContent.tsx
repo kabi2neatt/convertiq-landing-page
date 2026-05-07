@@ -296,7 +296,7 @@ function SquareVSLVideo() {
       {/* Main Frame */}
       <div className="relative overflow-hidden rounded-[1.7rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2.2rem]">
         
-        <div className="relative aspect-[9/18.5] w-full overflow-hidden md:aspect-[9/18]">
+        <div className="relative aspect-[9/17.5] w-full overflow-hidden md:aspect-[9/17]">
           
           {/* Wistia Video */}
           <iframe
