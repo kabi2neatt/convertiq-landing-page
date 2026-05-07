@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
-import { motion, MotionValue, useTransform } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, MotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { BarChart3, LayoutDashboard, LineChart, MonitorSmartphone, Zap } from "lucide-react";
-import { useLockedSectionProgress } from "@/components/useLockedSectionProgress";
 
 const services = [
   ["Google Ads Management", BarChart3, "High-intent campaigns designed to generate calls, form submissions, and booked jobs."],
@@ -43,7 +42,16 @@ function ServiceCard({ service, index, progress, mobile = false }: { service: (t
 }
 
 export function ServicesShowcase() {
-  const { ref, progress } = useLockedSectionProgress({ speed: 0.00115 });
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.22,
+  });
   const headingOpacity = useTransform(progress, [0, 0.1], [0, 1]);
   const headingY = useTransform(progress, [0, 0.1], [70, 0]);
   const gridY = useTransform(progress, [0.12, 0.28], [90, 0]);
@@ -51,8 +59,8 @@ export function ServicesShowcase() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="services" ref={ref as React.RefObject<HTMLElement>} className="relative h-screen bg-black text-white">
-      <div className="flex h-screen items-center overflow-hidden px-5 py-20 md:px-6">
+    <section id="services" ref={ref} className="relative h-[220svh] bg-black text-white">
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden px-5 py-20 md:px-6">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.2),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_32%)]" />
         <div className="relative mx-auto w-full max-w-7xl">
           <motion.div style={{ opacity: headingOpacity, y: headingY }} className="mx-auto max-w-4xl text-center">
