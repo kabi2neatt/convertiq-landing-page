@@ -287,69 +287,39 @@ function TypeformModal({ open, onClose }: { open: boolean; onClose: () => void }
 
 function SquareVSLVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [captionsOn, setCaptionsOn] = useState(true);
-  const [showStartButton, setShowStartButton] = useState(true);
 
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
 
     v.muted = true;
-    v.defaultMuted = true;
     v.playsInline = true;
     v.setAttribute("playsinline", "true");
     v.setAttribute("webkit-playsinline", "true");
 
     const timer = window.setTimeout(() => {
-      v.play()
-        .then(() => {
-          setIsPlaying(true);
-          setShowStartButton(false);
-        })
-        .catch(() => {
-          setIsPlaying(false);
-          setShowStartButton(true);
-        });
+      v.play().catch(() => {
+        // Mobile Safari may block autoplay. Native controls remain visible.
+      });
     }, 300);
 
     return () => window.clearTimeout(timer);
   }, []);
 
-  const startVideoFromTap = async () => {
+  const playVideo = async () => {
     const v = videoRef.current;
     if (!v) return;
 
     try {
       v.muted = true;
-      v.defaultMuted = true;
       v.playsInline = true;
       v.setAttribute("playsinline", "true");
       v.setAttribute("webkit-playsinline", "true");
-
-      if (v.readyState < 2) v.load();
-
       await v.play();
-      setIsPlaying(true);
-      setIsMuted(v.muted);
-      setShowStartButton(false);
     } catch (error) {
-      console.error("Video failed to start:", error);
-      setShowStartButton(true);
-    }
-  };
-
-  const togglePlay = async () => {
-    const v = videoRef.current;
-    if (!v) return;
-
-    if (v.paused) {
-      await startVideoFromTap();
-    } else {
-      v.pause();
-      setIsPlaying(false);
-      setShowStartButton(false);
+      console.error("Mobile video play failed:", error);
     }
   };
 
@@ -360,13 +330,9 @@ function SquareVSLVideo() {
     v.muted = !v.muted;
     setIsMuted(v.muted);
 
-    if (v.paused) {
-      try {
-        await v.play();
-        setIsPlaying(true);
-        setShowStartButton(false);
-      } catch {}
-    }
+    try {
+      await v.play();
+    } catch {}
   };
 
   const seek = (seconds: number) => {
@@ -403,53 +369,28 @@ function SquareVSLVideo() {
             autoPlay
             playsInline
             loop
-            controls={false}
-            preload="metadata"
-            onClick={startVideoFromTap}
+            controls
+            preload="auto"
+            onClick={playVideo}
+            onTouchStart={playVideo}
             onLoadedMetadata={() => {
               const v = videoRef.current;
               if (!v) return;
               v.muted = true;
-              v.defaultMuted = true;
+              v.playsInline = true;
+              v.setAttribute("playsinline", "true");
+              v.setAttribute("webkit-playsinline", "true");
             }}
-            onPlay={() => {
-              setIsPlaying(true);
-              setShowStartButton(false);
-            }}
-            onPause={() => setIsPlaying(false)}
           >
             <track src={CAPTIONS_SRC} kind="captions" srcLang="en" label="English" default />
           </video>
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-black/55 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-20 bg-gradient-to-t from-black/35 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-20 bg-gradient-to-b from-black/40 to-transparent" />
 
-          <div className="absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
+          <div className="pointer-events-none absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.9)]" />
             VSL Training
           </div>
-
-          {showStartButton && !isPlaying && (
-            <button
-              type="button"
-              onClick={startVideoFromTap}
-              className="absolute left-1/2 top-1/2 z-[55] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-2xl border border-white/20 bg-black/78 px-5 py-3 text-sm font-black text-white shadow-[0_0_45px_rgba(255,255,255,0.22)] backdrop-blur-xl transition hover:bg-black/90"
-            >
-              <Play size={18} fill="currentColor" strokeWidth={0} />
-              Tap to start video
-            </button>
-          )}
-
-          {isMuted && isPlaying && (
-            <button
-              type="button"
-              onClick={toggleMute}
-              className="absolute left-1/2 top-[58%] z-50 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-2xl border border-sky-300/35 bg-black/72 px-5 py-3 text-sm font-black text-white shadow-[0_0_45px_rgba(56,189,248,0.38)] backdrop-blur-xl transition hover:bg-black/90"
-            >
-              <Volume2 size={18} className="text-sky-200" />
-              Tap to unmute
-            </button>
-          )}
         </div>
 
         <div className="relative z-50 flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 px-3 py-3 text-white backdrop-blur-xl md:gap-2.5 md:px-4 md:py-4">
@@ -457,8 +398,8 @@ function SquareVSLVideo() {
             -5
           </button>
 
-          <button type="button" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"} className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-[0_0_28px_rgba(255,255,255,0.28)] transition hover:scale-105 md:h-12 md:w-12">
-            {isPlaying ? <Pause size={17} /> : <Play size={17} fill="currentColor" strokeWidth={0} />}
+          <button type="button" onClick={playVideo} aria-label="Play video" className="flex h-11 min-w-24 items-center justify-center gap-2 rounded-full bg-white px-4 text-[12px] font-black text-black shadow-[0_0_28px_rgba(255,255,255,0.28)] transition hover:scale-105 md:h-12">
+            <Play size={15} fill="currentColor" strokeWidth={0} /> Play
           </button>
 
           <button type="button" onClick={() => seek(5)} aria-label="Skip forward 5 seconds" className="flex h-9 min-w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] px-2 text-[11px] font-black text-white/85 transition hover:bg-white/[0.1] md:h-10 md:min-w-10">
