@@ -166,122 +166,6 @@ function HeroButton({
   );
 }
 
-function FixedMobileNavbar() {
-  const [open, setOpen] = useState(false);
-
-  const openForm = (type: "demo" | "audit") => {
-    setOpen(false);
-    window.dispatchEvent(
-      new CustomEvent("open-convertiq-form", { detail: { type } })
-    );
-  };
-
-  const close = () => setOpen(false);
-
-  return (
-    <div className="fixed left-3 right-3 top-[calc(env(safe-area-inset-top)+0.6rem)] z-[999999] md:hidden">
-      <div className="rounded-3xl border border-white/10 bg-black/68 p-1.5 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-2xl">
-        <div className="flex items-center justify-between gap-2">
-          <a href="#home" onClick={close} className="shrink-0">
-            <img
-              src="/convertiqmedia.png"
-              alt="ConvertIQ Media"
-              className="h-11 w-11 rounded-sm bg-white object-contain p-1"
-            />
-          </a>
-
-          <a
-            href={CALENDLY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 rounded-2xl bg-[#38bdf8] px-5 py-2.5 text-sm font-black text-black shadow-[0_0_28px_rgba(56,189,248,0.55)]"
-          >
-            Book Call
-          </a>
-        </div>
-
-        <div className="mt-1.5 grid grid-cols-2 gap-1.5">
-          <a
-            href="#home"
-            onClick={close}
-            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-2.5 text-center text-sm font-black text-white backdrop-blur-xl"
-          >
-            Home
-          </a>
-
-          <button
-            type="button"
-            onClick={() => setOpen((prev) => !prev)}
-            className="rounded-2xl border border-white/10 bg-white/[0.07] px-3 py-2.5 text-center text-sm font-black text-white backdrop-blur-xl"
-          >
-            Navigation ↓
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              initial={{ opacity: 0, y: -8, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.98 }}
-              transition={{ duration: 0.18 }}
-              className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)]"
-            >
-              <a
-                href="#services"
-                onClick={close}
-                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-              >
-                Services
-              </a>
-
-              <a
-                href="#case-study"
-                onClick={close}
-                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-              >
-                Case Study
-              </a>
-
-              <a
-                href="#why-us"
-                onClick={close}
-                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-              >
-                Why ConvertIQ
-              </a>
-
-              <a
-                href="#faq"
-                onClick={close}
-                className="block rounded-xl px-4 py-3 text-sm font-bold text-white/90 hover:bg-white/10"
-              >
-                FAQ
-              </a>
-
-              <button
-                type="button"
-                onClick={() => openForm("demo")}
-                className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
-              >
-                Free Website Demo
-              </button>
-
-              <button
-                type="button"
-                onClick={() => openForm("audit")}
-                className="block w-full rounded-xl px-4 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
-              >
-                Free Google Ads Audit
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
-}
-
 function HeroContent({
   progress,
   isMobile = false,
@@ -440,7 +324,7 @@ function HeroContent({
           className="pointer-events-none absolute z-10 h-[260px] w-[260px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/12 blur-[80px] md:h-[360px] md:w-[360px] md:blur-[100px]"
         />
 
-        <div className="relative z-20 flex h-full flex-col items-center justify-start px-4 pt-[14.75rem] text-center md:justify-center md:px-6 md:pt-0">
+        <div className="relative z-20 flex h-full flex-col items-center justify-start px-4 pt-[8.75rem] text-center md:justify-center md:px-6 md:pt-0">
           <motion.div
             style={{ y: contentY, scale: contentScale }}
             className="flex flex-col items-center"
@@ -574,9 +458,9 @@ function MobileHeroScroll() {
   const [released, setReleased] = useState(false);
 
   const progress = useSpring(progressRaw, {
-    stiffness: 55,
+    stiffness: 95,
     damping: 18,
-    mass: 0.22,
+    mass: 0.14,
   });
 
   useEffect(() => {
@@ -591,7 +475,7 @@ function MobileHeroScroll() {
     const clamp = (value: number) => Math.min(1, Math.max(0, value));
 
     const advance = (delta: number) => {
-      const next = clamp(progressValue.current + delta / 1450);
+      const next = clamp(progressValue.current + delta / 780);
       progressValue.current = next;
       progressRaw.set(next);
 
@@ -647,7 +531,6 @@ function MobileHeroScroll() {
 
   return (
     <section id="home" className="relative h-[100svh] overflow-hidden bg-black text-white">
-      <FixedMobileNavbar />
       <HeroContent progress={progress} isMobile />
     </section>
   );
