@@ -45,10 +45,10 @@ const VIDEO_SRC = "/vsl-ugc-portrait.mp4";
 const CAPTIONS_SRC = "/vsl-captions.vtt";
 
 const clientLogos = [
-  "/clients/Summit Roofing.png",
-  "/clients/Clearflow Plumbing.png",
-  "/clients/Multi Logo.png",
-  "/clients/mrgutter.png",
+  "/Clients/Summit Roofing.png",
+  "/Clients/Clearflow Plumbing.png",
+  "/Clients/Multi Logo.png",
+  "/Clients/mrgutter.png",
 ];
 
 const benefits = [
