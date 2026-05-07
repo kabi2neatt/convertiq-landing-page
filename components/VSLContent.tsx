@@ -42,7 +42,6 @@ const TYPEFORM_URL = "https://form.typeform.com/to/ZQ29PRZp";
 const TYPEFORM_EMBED_URL = `${TYPEFORM_URL}?typeform-embed=embed-widget`;
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
 const VIDEO_SRC = "/vsl-ugc-portrait.mp4";
-const VIDEO_POSTER = "/vsl-ugc-poster.jpg";
 const CAPTIONS_SRC = "/vsl-captions.vtt";
 
 const clientLogos = [
@@ -288,51 +287,45 @@ function TypeformModal({ open, onClose }: { open: boolean; onClose: () => void }
 
 function SquareVSLVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [captionsOn, setCaptionsOn] = useState(true);
-  const [showUnmute, setShowUnmute] = useState(false);
-
-  const { scrollYProgress } = useScroll({
-    target: wrapRef,
-    offset: ["start 80%", "end 30%"],
-  });
+  const [showUnmute, setShowUnmute] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on("change", async (value) => {
-      const v = videoRef.current;
-      if (!v) return;
+    const v = videoRef.current;
+    if (!v) return;
 
-      if (value > 0.18 && v.paused) {
-        try {
-          v.muted = true;
-          setIsMuted(true);
-          await v.play();
-          setIsPlaying(true);
-          setShowUnmute(true);
-        } catch {
-          // Browser blocked autoplay. The play button still works.
-        }
+    v.muted = true;
+    v.playsInline = true;
+
+    const startVideo = async () => {
+      try {
+        await v.play();
+        setIsPlaying(true);
+        setShowUnmute(true);
+      } catch {
+        setIsPlaying(false);
       }
-    });
+    };
 
-    return () => unsubscribe();
-  }, [scrollYProgress]);
+    void startVideo();
+  }, []);
 
   const togglePlay = async () => {
     const v = videoRef.current;
     if (!v) return;
+
     if (v.paused) {
       try {
         await v.play();
+        setIsPlaying(true);
       } catch {
         v.muted = true;
         setIsMuted(true);
         await v.play();
+        setIsPlaying(true);
       }
-      setIsPlaying(true);
-      setShowUnmute(true);
     } else {
       v.pause();
       setIsPlaying(false);
@@ -342,9 +335,16 @@ function SquareVSLVideo() {
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
+
     v.muted = !v.muted;
     setIsMuted(v.muted);
     if (!v.muted) setShowUnmute(false);
+  };
+
+  const seek = (seconds: number) => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.currentTime = Math.max(0, Math.min(v.duration || 0, v.currentTime + seconds));
   };
 
   const toggleCaptions = () => {
@@ -356,7 +356,7 @@ function SquareVSLVideo() {
   };
 
   return (
-    <div ref={wrapRef} className="relative mx-auto w-full max-w-[390px] sm:max-w-[460px] md:max-w-[560px] lg:max-w-[620px]">
+    <div className="relative mx-auto w-full max-w-[390px] sm:max-w-[460px] md:max-w-[560px] lg:max-w-[620px]">
       <div className="pointer-events-none absolute -inset-4 rounded-[2.2rem] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.45),transparent_62%)] blur-2xl md:-inset-7" />
       <div className="pointer-events-none absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
 
@@ -366,10 +366,10 @@ function SquareVSLVideo() {
             ref={videoRef}
             className="h-full w-full object-cover"
             src={VIDEO_SRC}
-            poster={VIDEO_POSTER}
+            autoPlay
+            muted
             playsInline
-            muted={isMuted}
-            preload="metadata"
+            preload="auto"
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
             onEnded={() => setIsPlaying(false)}
@@ -378,14 +378,14 @@ function SquareVSLVideo() {
           </video>
 
           <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 bg-gradient-to-b from-black/55 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-36 bg-gradient-to-t from-black/70 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-40 bg-gradient-to-t from-black/76 to-transparent" />
 
           <div className="absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.9)]" />
             VSL Training
           </div>
 
-          {showUnmute && isMuted && isPlaying && (
+          {showUnmute && isMuted && (
             <button
               type="button"
               onClick={toggleMute}
@@ -396,25 +396,52 @@ function SquareVSLVideo() {
             </button>
           )}
 
-          {!isPlaying && (
-            <button type="button" onClick={togglePlay} aria-label="Play video" className="absolute inset-0 z-40 flex items-center justify-center bg-gradient-to-b from-black/35 via-black/10 to-black/70 backdrop-blur-[1px] transition">
-              <motion.div animate={{ boxShadow: ["0 0 35px rgba(255,255,255,0.35)", "0 0 75px rgba(255,255,255,0.62)", "0 0 35px rgba(255,255,255,0.35)"] }} whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.94 }} transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }} className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white text-black shadow-[0_0_50px_rgba(255,255,255,0.5)] md:h-20 md:w-20">
-                <span className="absolute inset-0 animate-ping rounded-full bg-white/25" />
-                <Play size={28} className="relative ml-1" fill="currentColor" strokeWidth={0} />
-              </motion.div>
-              <span className="absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-black/70 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/95 backdrop-blur">Tap to watch</span>
+          <div className="absolute bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-2xl border border-white/12 bg-black/58 px-2.5 py-2 text-white shadow-[0_15px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl md:gap-2.5 md:px-3">
+            <button
+              type="button"
+              onClick={() => seek(-5)}
+              aria-label="Rewind 5 seconds"
+              className="flex h-9 min-w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] px-2 text-[11px] font-black text-white/85 transition hover:bg-white/[0.1] md:h-10 md:min-w-10"
+            >
+              -5
             </button>
-          )}
 
-          <div className="absolute bottom-4 right-4 z-50 flex gap-2">
-            <button type="button" onClick={toggleCaptions} aria-label="Toggle captions" className={`flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur-md transition md:h-10 md:w-10 ${captionsOn ? "border-sky-300/40 bg-sky-400/25 text-sky-100" : "border-white/20 bg-black/55 text-white"}`}>
-              <Captions size={15} />
+            <button
+              type="button"
+              onClick={togglePlay}
+              aria-label={isPlaying ? "Pause" : "Play"}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-[0_0_28px_rgba(255,255,255,0.28)] transition hover:scale-105 md:h-11 md:w-11"
+            >
+              {isPlaying ? <Pause size={16} /> : <Play size={16} fill="currentColor" strokeWidth={0} />}
             </button>
-            <button type="button" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white backdrop-blur-md transition hover:bg-black/75 md:h-10 md:w-10">
+
+            <button
+              type="button"
+              onClick={() => seek(5)}
+              aria-label="Skip forward 5 seconds"
+              className="flex h-9 min-w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] px-2 text-[11px] font-black text-white/85 transition hover:bg-white/[0.1] md:h-10 md:min-w-10"
+            >
+              +5
+            </button>
+
+            <div className="mx-0.5 h-7 w-px bg-white/12" />
+
+            <button
+              type="button"
+              onClick={toggleMute}
+              aria-label={isMuted ? "Unmute" : "Mute"}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] text-white transition hover:bg-white/[0.1] md:h-10 md:w-10"
+            >
               {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
             </button>
-            <button type="button" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white backdrop-blur-md transition hover:bg-black/75 md:h-10 md:w-10">
-              {isPlaying ? <Pause size={15} /> : <Play size={15} />}
+
+            <button
+              type="button"
+              onClick={toggleCaptions}
+              aria-label="Toggle captions"
+              className={`flex h-9 w-9 items-center justify-center rounded-full border transition md:h-10 md:w-10 ${captionsOn ? "border-sky-300/40 bg-sky-400/25 text-sky-100" : "border-white/15 bg-white/[0.055] text-white"}`}
+            >
+              <Captions size={15} />
             </button>
           </div>
         </div>
