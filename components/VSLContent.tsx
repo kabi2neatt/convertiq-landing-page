@@ -292,7 +292,7 @@ function SquareVSLVideo() {
       <div className="pointer-events-none absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
 
       <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
-        <div className="relative aspect-[9/15.5] w-full overflow-hidden md:aspect-[9/13.5]">
+        <div className="relative aspect-[9/14] w-full overflow-hidden md:aspect-[9/12]">
           <iframe
             title="ConvertIQ VSL"
             src="https://fast.wistia.net/embed/iframe/48i7dt9tre?autoplay=1&muted=1&seo=false&videoFoam=true&playsinline=1"
