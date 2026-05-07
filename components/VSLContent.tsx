@@ -165,11 +165,39 @@ function MagneticCTA({ href, children, variant = "purple", className = "" }: { h
   );
 }
 
-function PortraitVSLVideo() {
+function SquareVSLVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [captionsOn, setCaptionsOn] = useState(true);
+  const [showUnmute, setShowUnmute] = useState(false);
+
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start 80%", "end 30%"],
+  });
+
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.on("change", async (value) => {
+      const v = videoRef.current;
+      if (!v) return;
+
+      if (value > 0.18 && v.paused) {
+        try {
+          v.muted = true;
+          setIsMuted(true);
+          await v.play();
+          setIsPlaying(true);
+          setShowUnmute(true);
+        } catch {
+          // Browser blocked autoplay. The play button still works.
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [scrollYProgress]);
 
   const togglePlay = async () => {
     const v = videoRef.current;
@@ -183,10 +211,19 @@ function PortraitVSLVideo() {
         await v.play();
       }
       setIsPlaying(true);
+      setShowUnmute(true);
     } else {
       v.pause();
       setIsPlaying(false);
     }
+  };
+
+  const toggleMute = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setIsMuted(v.muted);
+    if (!v.muted) setShowUnmute(false);
   };
 
   const toggleCaptions = () => {
@@ -198,21 +235,45 @@ function PortraitVSLVideo() {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[310px] sm:max-w-[340px] md:max-w-[390px]">
+    <div ref={wrapRef} className="relative mx-auto w-full max-w-[390px] sm:max-w-[460px] md:max-w-[560px] lg:max-w-[620px]">
       <div className="pointer-events-none absolute -inset-4 rounded-[2.2rem] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.45),transparent_62%)] blur-2xl md:-inset-7" />
       <div className="pointer-events-none absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
-      <div className="relative overflow-hidden rounded-[1.75rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
-        <div className="relative aspect-[9/16] w-full">
-          <video ref={videoRef} className="h-full w-full object-cover" src={VIDEO_SRC} poster={VIDEO_POSTER} playsInline preload="metadata" onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} onEnded={() => setIsPlaying(false)}>
+
+      <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
+        <div className="relative aspect-square w-full">
+          <video
+            ref={videoRef}
+            className="h-full w-full object-cover"
+            src={VIDEO_SRC}
+            poster={VIDEO_POSTER}
+            playsInline
+            muted={isMuted}
+            preload="metadata"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onEnded={() => setIsPlaying(false)}
+          >
             <track src={CAPTIONS_SRC} kind="captions" srcLang="en" label="English" default />
           </video>
 
           <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 bg-gradient-to-b from-black/55 to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-36 bg-gradient-to-t from-black/70 to-transparent" />
+
           <div className="absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.9)]" />
             VSL Training
           </div>
+
+          {showUnmute && isMuted && isPlaying && (
+            <button
+              type="button"
+              onClick={toggleMute}
+              className="absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-2xl border border-sky-300/35 bg-black/72 px-5 py-3 text-sm font-black text-white shadow-[0_0_45px_rgba(56,189,248,0.38)] backdrop-blur-xl transition hover:bg-black/90"
+            >
+              <Volume2 size={18} className="text-sky-200" />
+              Tap to unmute
+            </button>
+          )}
 
           {!isPlaying && (
             <button type="button" onClick={togglePlay} aria-label="Play video" className="absolute inset-0 z-40 flex items-center justify-center bg-gradient-to-b from-black/35 via-black/10 to-black/70 backdrop-blur-[1px] transition">
@@ -228,7 +289,7 @@ function PortraitVSLVideo() {
             <button type="button" onClick={toggleCaptions} aria-label="Toggle captions" className={`flex h-9 w-9 items-center justify-center rounded-full border backdrop-blur-md transition md:h-10 md:w-10 ${captionsOn ? "border-sky-300/40 bg-sky-400/25 text-sky-100" : "border-white/20 bg-black/55 text-white"}`}>
               <Captions size={15} />
             </button>
-            <button type="button" onClick={() => { const v = videoRef.current; if (!v) return; v.muted = !v.muted; setIsMuted(v.muted); }} aria-label={isMuted ? "Unmute" : "Mute"} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white backdrop-blur-md transition hover:bg-black/75 md:h-10 md:w-10">
+            <button type="button" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white backdrop-blur-md transition hover:bg-black/75 md:h-10 md:w-10">
               {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
             </button>
             <button type="button" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white backdrop-blur-md transition hover:bg-black/75 md:h-10 md:w-10">
@@ -290,7 +351,7 @@ function Hero() {
           </div>
         </div>
 
-        <PortraitVSLVideo />
+        <SquareVSLVideo />
       </motion.div>
     </section>
   );
@@ -410,6 +471,101 @@ function Testimonials() {
   );
 }
 
+function CaseStudy() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 22, mass: 0.45 });
+
+  const headingOpacity = useTransform(progress, [0.05, 0.2], [0, 1]);
+  const headingY = useTransform(progress, [0.05, 0.2], [70, 0]);
+  const cardY = useTransform(progress, [0.18, 0.42], [90, 0]);
+  const cardOpacity = useTransform(progress, [0.18, 0.38], [0, 1]);
+  const lineWidth = useTransform(progress, [0.32, 0.72], ["0%", "100%"]);
+
+  const metrics = [
+    { value: "32+", label: "qualified leads generated", detail: "within the first campaign cycle" },
+    { value: "$90", label: "approx. cost per lead", detail: "after campaign restructure" },
+    { value: "47%", label: "better page engagement", detail: "from faster landing-page flow" },
+  ];
+
+  return (
+    <section ref={sectionRef} className="relative overflow-hidden border-t border-white/10 bg-black px-4 py-20 text-white md:px-6 md:py-28">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(56,189,248,0.16),transparent_34%),radial-gradient(circle_at_85%_80%,rgba(168,85,247,0.18),transparent_38%)]" />
+
+      <div className="relative mx-auto max-w-7xl">
+        <motion.div style={{ opacity: headingOpacity, y: headingY }} className="mx-auto max-w-3xl text-center">
+          <div className="mb-4 inline-flex rounded-full border border-purple-400/25 bg-white/[0.04] px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.28em] text-purple-200 md:text-xs">
+            Mini case study
+          </div>
+          <h2 className="text-[1.9rem] font-black leading-[0.95] tracking-[-0.06em] md:text-6xl">
+            From wasted clicks to a lead system they could actually track.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/65 md:mt-6 md:text-base md:leading-8">
+            A simple breakdown of how we restructure the funnel: better landing page, cleaner tracking, stronger offer, and ads optimized around qualified leads instead of random clicks.
+          </p>
+        </motion.div>
+
+        <motion.div style={{ opacity: cardOpacity, y: cardY }} className="mt-10 grid gap-4 md:mt-14 lg:grid-cols-[0.95fr_1.05fr] lg:gap-6">
+          <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-xl md:p-7">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-400/15 text-red-200 ring-1 ring-red-300/20">
+                <BarChart3 size={21} />
+              </div>
+              <div>
+                <div className="text-sm font-black uppercase tracking-[0.18em] text-white/45">Before</div>
+                <h3 className="text-xl font-black tracking-[-0.04em] md:text-2xl">The problem</h3>
+              </div>
+            </div>
+            <ul className="space-y-3 text-sm leading-7 text-white/72">
+              <li className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-300" /> Ads were generating clicks, but lead quality was inconsistent.</li>
+              <li className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-300" /> Landing page did not clearly explain the offer or push users to take action.</li>
+              <li className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-red-300" /> Tracking was too weak to know which keywords, ads, or pages were creating real opportunities.</li>
+            </ul>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-gradient-to-br from-blue-500/[0.12] via-white/[0.045] to-purple-500/[0.12] p-5 backdrop-blur-xl md:p-7">
+            <div className="mb-5 flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/15 text-emerald-200 ring-1 ring-emerald-300/20">
+                <TrendingUp size={21} />
+              </div>
+              <div>
+                <div className="text-sm font-black uppercase tracking-[0.18em] text-white/45">After</div>
+                <h3 className="text-xl font-black tracking-[-0.04em] md:text-2xl">What we changed</h3>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              {metrics.map((metric, i) => (
+                <motion.div
+                  key={metric.label}
+                  style={{ opacity: useTransform(progress, [0.28 + i * 0.08, 0.46 + i * 0.08], [0, 1]), y: useTransform(progress, [0.28 + i * 0.08, 0.46 + i * 0.08], [50, 0]) }}
+                  className="rounded-2xl border border-white/10 bg-black/24 p-4"
+                >
+                  <div className="text-3xl font-black tracking-[-0.06em] text-white md:text-4xl">{metric.value}</div>
+                  <div className="mt-1 text-[12px] font-black leading-4 text-sky-100">{metric.label}</div>
+                  <div className="mt-2 text-[11px] leading-5 text-white/50">{metric.detail}</div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-6 overflow-hidden rounded-full bg-white/10">
+              <motion.div style={{ width: lineWidth }} className="h-1.5 rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-fuchsia-400" />
+            </div>
+
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              {["Rebuilt landing page", "Fixed conversion tracking", "Optimized ads around leads"].map((item) => (
+                <div key={item} className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-[12px] font-bold text-white/75">
+                  <CheckCircle2 size={15} className="text-emerald-300" /> {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCTA() {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
@@ -455,6 +611,7 @@ export function VSLContent() {
       <TrustedBy />
       <Benefits />
       <Testimonials />
+      <CaseStudy />
       <FinalCTA />
     </div>
   );
