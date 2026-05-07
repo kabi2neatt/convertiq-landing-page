@@ -286,73 +286,44 @@ function TypeformModal({ open, onClose }: { open: boolean; onClose: () => void }
 }
 
 function SquareVSLVideo() {
-  const [showOverlayPlay, setShowOverlayPlay] = useState(true);
-  const [loadVideo, setLoadVideo] = useState(false);
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-
-    if (loadVideo && showOverlayPlay) {
-      timeout = setTimeout(() => {
-        setShowOverlayPlay(false);
-      }, 2600);
-    }
-
-    return () => clearTimeout(timeout);
-  }, [loadVideo, showOverlayPlay]);
-
-  const handlePlayClick = () => {
-    setLoadVideo(true);
-    setShowOverlayPlay(true);
-  };
-
-  const handleVideoAreaTap = () => {
-    setShowOverlayPlay(true);
-  };
-
   return (
     <div className="relative mx-auto w-full max-w-[390px] sm:max-w-[430px] md:max-w-[500px] lg:max-w-[540px]">
       <div className="pointer-events-none absolute -inset-4 rounded-[2.2rem] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.45),transparent_62%)] blur-2xl md:-inset-7" />
       <div className="pointer-events-none absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
 
       <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
-        <div
-          className="group relative aspect-[9/16] w-full cursor-pointer overflow-hidden md:aspect-[9/14]"
-          onClick={handleVideoAreaTap}
-        >
-          {loadVideo ? (
-            <iframe
-              title="ConvertIQ VSL"
-              src="https://player.vimeo.com/video/1190033794?h=1dde90e6af&autoplay=1&muted=1&title=0&byline=0&portrait=0&badge=0&controls=1&playsinline=1"
-              className="absolute inset-0 h-full w-full"
-              frameBorder="0"
-              loading="lazy"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={handlePlayClick}
-              className="absolute inset-0 z-20 flex items-center justify-center bg-black"
-            >
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.25),transparent_60%)]" />
-              <div className="relative flex h-28 w-28 items-center justify-center rounded-full border border-white/20 bg-white/95 shadow-[0_0_90px_rgba(255,255,255,0.25)] transition duration-300 hover:scale-105 md:h-36 md:w-36">
-                <Play size={42} fill="black" strokeWidth={0} className="ml-1 text-black md:h-14 md:w-14" />
-              </div>
-            </button>
-          )}
+        <div className="relative aspect-[9/16] w-full overflow-hidden md:aspect-[9/14]">
+          <script src="https://fast.wistia.com/player.js" async></script>
+          <script
+            src="https://fast.wistia.com/embed/48i7dt9tre.js"
+            async
+            type="module"
+          ></script>
 
-          {loadVideo && showOverlayPlay && (
-            <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center transition-opacity duration-700">
-              <div className="flex h-24 w-24 items-center justify-center rounded-full border border-white/20 bg-black/55 backdrop-blur-xl shadow-[0_0_80px_rgba(255,255,255,0.16)] md:h-28 md:w-28">
-                <Play size={34} fill="white" strokeWidth={0} className="ml-1 text-white md:h-10 md:w-10" />
-              </div>
-            </div>
-          )}
+          <style jsx>{`
+            wistia-player[media-id='48i7dt9tre']:not(:defined) {
+              background: center / cover no-repeat url('https://fast.wistia.com/embed/medias/48i7dt9tre/swatch');
+              display: block;
+              filter: blur(6px);
+              width: 100%;
+              height: 100%;
+            }
+          `}</style>
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-20 bg-gradient-to-b from-black/35 to-transparent" />
+          <wistia-player
+            media-id="48i7dt9tre"
+            aspect="0.5625"
+            autoplay="true"
+            muted="true"
+            controls-visible-on-load="false"
+            playbar="true"
+            fullscreen-button="true"
+            volume-control="true"
+            small-play-button="false"
+            className="absolute inset-0 h-full w-full"
+          ></wistia-player>
+
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-black/45 to-transparent" />
 
           <div className="pointer-events-none absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.9)]" />
