@@ -295,7 +295,7 @@ function SquareVSLVideo() {
         <div className="relative aspect-[9/16] w-full md:aspect-[9/14]">
           <iframe
             title="ConvertIQ VSL"
-            src="https://player.vimeo.com/video/1190033794?h=1dde90e6af&autoplay=1&muted=1&title=0&byline=0&portrait=0&badge=0&controls=1&playsinline=1"
+            src="https://player.vimeo.com/video/1190033794?h=1dde90e6af&autoplay=0&muted=1&title=0&byline=0&portrait=0&badge=0&controls=1&playsinline=1"
             className="absolute inset-0 h-full w-full"
             frameBorder="0"
             allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
