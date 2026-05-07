@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   AnimatePresence,
   motion,
@@ -31,9 +32,20 @@ function TallyModal({
 }) {
   const touchStartY = React.useRef<number | null>(null);
   const touchStartX = React.useRef<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
+
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
     if (typeof window !== "undefined" && (window as any).Tally) {
       setTimeout(() => (window as any).Tally.loadEmbeds(), 100);
@@ -44,7 +56,12 @@ function TallyModal({
     };
 
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
   }, [open, onClose]);
 
   const isDemo = type === "demo";
@@ -69,13 +86,15 @@ function TallyModal({
     touchStartX.current = null;
   };
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/85 p-4 backdrop-blur-xl"
+          className="fixed inset-0 z-[9999999] flex items-center justify-center bg-black/90 p-4 backdrop-blur-xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -114,7 +133,8 @@ function TallyModal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 
