@@ -38,7 +38,8 @@ import { useLockedSectionProgress } from "@/components/useLockedSectionProgress"
     https://calendly.com/kabir-convertiq-media/30min?name={{name}}&email={{email}}&a1={{phone}}&a2={{company}}
 */
 
-const TYPEFORM_URL = "https://form.typeform.com/to/YOUR_TYPEFORM_ID";
+const TYPEFORM_URL = "https://form.typeform.com/to/ZQ29PRZp";
+const TYPEFORM_EMBED_URL = `${TYPEFORM_URL}?typeform-embed=embed-widget`;
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
 const VIDEO_SRC = "/vsl-ugc-portrait.mp4";
 const VIDEO_POSTER = "/vsl-ugc-poster.jpg";
@@ -171,13 +172,27 @@ function AnimatedCounter({
 
 type CTAVariant = "sky" | "purple" | "blue";
 
-function MagneticCTA({ href, children, variant = "purple", className = "" }: { href: string; children: React.ReactNode; variant?: CTAVariant; className?: string }) {
+function MagneticCTA({
+  href,
+  children,
+  variant = "purple",
+  className = "",
+  onClick,
+}: {
+  href?: string;
+  children: React.ReactNode;
+  variant?: CTAVariant;
+  className?: string;
+  onClick?: () => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const styles: Record<CTAVariant, string> = {
     sky: "bg-[#38bdf8] text-black shadow-[0_0_45px_rgba(56,189,248,0.5)] hover:bg-[#7dd3fc]",
     purple: "bg-[#8b45d9] text-white shadow-[0_0_45px_rgba(168,85,247,0.45)] hover:bg-purple-500",
     blue: "bg-[#1600b8] text-white shadow-[0_0_45px_rgba(37,99,235,0.4)] hover:bg-blue-700",
   };
+
+  const sharedClass = `inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-[13px] font-black tracking-tight transition md:w-auto md:px-9 md:text-sm ${styles[variant]}`;
 
   return (
     <motion.div
@@ -196,9 +211,77 @@ function MagneticCTA({ href, children, variant = "purple", className = "" }: { h
       transition={{ type: "spring", stiffness: 240, damping: 18 }}
       className={className}
     >
-      <a href={href} target="_blank" rel="noopener noreferrer" className={`inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 text-[13px] font-black tracking-tight transition md:w-auto md:px-9 md:text-sm ${styles[variant]}`}>
-        {children}
-      </a>
+      {onClick ? (
+        <button type="button" onClick={onClick} className={sharedClass}>
+          {children}
+        </button>
+      ) : (
+        <a href={href} target="_blank" rel="noopener noreferrer" className={sharedClass}>
+          {children}
+        </a>
+      )}
+    </motion.div>
+  );
+}
+
+function TypeformModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  useEffect(() => {
+    if (!open) return;
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = original;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/76 px-3 py-5 backdrop-blur-xl md:px-6"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 36, scale: 0.94 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ type: "spring", stiffness: 190, damping: 22 }}
+        className="relative h-[88vh] w-full max-w-5xl overflow-hidden rounded-[1.6rem] border border-white/12 bg-[#05050a] shadow-[0_35px_140px_rgba(59,130,246,0.35)] md:h-[86vh] md:rounded-[2rem]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(56,189,248,0.18),transparent_34%),radial-gradient(circle_at_82%_80%,rgba(168,85,247,0.18),transparent_38%)]" />
+
+        <div className="relative flex h-14 items-center justify-between border-b border-white/10 bg-black/45 px-4 backdrop-blur-xl md:h-16 md:px-6">
+          <div>
+            <div className="text-sm font-black tracking-[-0.02em] text-white md:text-base">Free Strategy Application</div>
+            <div className="hidden text-xs font-semibold text-white/45 sm:block">Complete the short application, then book your call.</div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-xl leading-none text-white/70 transition hover:bg-white/[0.09] hover:text-white"
+            aria-label="Close application"
+          >
+            ×
+          </button>
+        </div>
+
+        <iframe
+          title="ConvertIQ Strategy Application"
+          src={TYPEFORM_EMBED_URL}
+          className="relative h-[calc(100%-3.5rem)] w-full bg-white md:h-[calc(100%-4rem)]"
+          allow="camera; microphone; autoplay; encrypted-media;"
+        />
+      </motion.div>
     </motion.div>
   );
 }
@@ -340,7 +423,7 @@ function SquareVSLVideo() {
   );
 }
 
-function Hero() {
+function Hero({ onApplyClick }: { onApplyClick: () => void }) {
   return (
     <section id="vsl-hero" className="relative isolate overflow-hidden bg-black px-4 pb-14 pt-24 text-white sm:pt-28 md:px-6 md:pb-24 md:pt-32">
       <div className="pointer-events-none absolute inset-0 -z-20 bg-[radial-gradient(circle_at_18%_18%,rgba(37,99,235,0.24),transparent_34%),radial-gradient(circle_at_80%_18%,rgba(168,85,247,0.22),transparent_36%),linear-gradient(180deg,#05050a_0%,#080812_48%,#000_100%)]" />
@@ -377,7 +460,7 @@ function Hero() {
           </div>
 
           <div className="mt-7 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center md:mt-8">
-            <MagneticCTA href={TYPEFORM_URL} variant="sky"><CalendarDays size={17} /> Watch & Apply Now</MagneticCTA>
+            <MagneticCTA onClick={onApplyClick} variant="sky"><CalendarDays size={17} /> Apply For Free Strategy Call</MagneticCTA>
             <a href="#what-you-learn" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/12 bg-white/[0.045] px-6 py-4 text-[13px] font-black text-white/82 backdrop-blur transition hover:bg-white/[0.08]">See what you’ll learn <ArrowRight size={16} /></a>
           </div>
 
@@ -702,7 +785,7 @@ function ProjectPreview() {
   );
 }
 
-function FinalCTA() {
+function FinalCTA({ onApplyClick }: { onApplyClick: () => void }) {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 23, mass: 0.42 });
@@ -717,7 +800,7 @@ function FinalCTA() {
         <h2 className="text-[2rem] font-black leading-[0.95] tracking-[-0.06em] md:text-6xl">Ready to see what your funnel <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">could be doing?</span></h2>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-white/70 md:mt-6 md:text-lg md:leading-8">Apply first, then book your free strategy call. Your Typeform answers should be passed into Calendly so you do not have to re-enter the same information.</p>
         <div className="mt-7 flex flex-col items-center gap-5 md:mt-10">
-          <MagneticCTA href={TYPEFORM_URL} variant="purple"><CalendarDays size={18} /> Apply & Book My Free Call</MagneticCTA>
+          <MagneticCTA onClick={onApplyClick} variant="purple"><CalendarDays size={18} /> Apply & Book My Free Call</MagneticCTA>
           <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11.5px] font-semibold text-white/65 md:text-xs">{finalCtaChecks.map((c) => <li key={c} className="flex items-center gap-2"><CheckCircle2 size={14} className="text-emerald-300" />{c}</li>)}</ul>
         </div>
       </motion.div>
@@ -725,7 +808,7 @@ function FinalCTA() {
   );
 }
 
-function StickyMobileCTA() {
+function StickyMobileCTA({ onApplyClick }: { onApplyClick: () => void }) {
   return (
     <motion.div
       initial={{ y: 120, opacity: 0 }}
@@ -733,15 +816,14 @@ function StickyMobileCTA() {
       transition={{ delay: 0.9, duration: 0.45, ease: "easeOut" }}
       className="fixed inset-x-0 bottom-0 z-[70] border-t border-white/10 bg-black/78 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 shadow-[0_-20px_60px_rgba(59,130,246,0.18)] backdrop-blur-xl md:hidden"
     >
-      <a
-        href={TYPEFORM_URL}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
+        onClick={onApplyClick}
         className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#38bdf8] px-5 py-4 text-[13px] font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.45)]"
       >
         Apply & Book Strategy Call
         <CalendarDays size={17} />
-      </a>
+      </button>
       <div className="mt-2 flex items-center justify-center gap-1.5 text-[10px] font-bold text-white/45">
         <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
         Free review. No pressure.
@@ -757,6 +839,9 @@ function PageScrollBar() {
 }
 
 export function VSLContent() {
+  const [isTypeformOpen, setIsTypeformOpen] = useState(false);
+  const openTypeform = () => setIsTypeformOpen(true);
+  const closeTypeform = () => setIsTypeformOpen(false);
   useEffect(() => {
     if (typeof window === "undefined" || !window.location.hash) return;
     const el = document.querySelector(window.location.hash);
@@ -768,14 +853,15 @@ export function VSLContent() {
   return (
     <div className="relative bg-black text-white">
       <PageScrollBar />
-      <StickyMobileCTA />
-      <Hero />
+      <StickyMobileCTA onApplyClick={openTypeform} />
+      <TypeformModal open={isTypeformOpen} onClose={closeTypeform} />
+      <Hero onApplyClick={openTypeform} />
       <TrustedBy />
       <Benefits />
       <Testimonials />
       <CaseStudy />
       <ProjectPreview />
-      <FinalCTA />
+      <FinalCTA onApplyClick={openTypeform} />
     </div>
   );
 }
