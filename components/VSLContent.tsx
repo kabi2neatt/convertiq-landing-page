@@ -45,10 +45,10 @@ const VIDEO_SRC = "/vsl-ugc-portrait.mp4";
 const CAPTIONS_SRC = "/vsl-captions.vtt";
 
 const clientLogos = [
-  "/Clients/Summit Roofing.png",
-  "/Clients/Clearflow Plumbing.png",
-  "/Clients/Multi Logo.png",
-  "/Clients/mrgutter.png",
+  "/clients/Summit Roofing.png",
+  "/clients/Clearflow Plumbing.png",
+  "/clients/Multi Logo.png",
+  "/clients/mrgutter.png",
 ];
 
 const benefits = [
@@ -290,26 +290,41 @@ function SquareVSLVideo() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [captionsOn, setCaptionsOn] = useState(true);
-  const [showUnmute, setShowUnmute] = useState(true);
+  const [needsTapToStart, setNeedsTapToStart] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
+
+  const attemptPlay = async () => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    try {
+      v.muted = true;
+      v.defaultMuted = true;
+      v.playsInline = true;
+      await v.play();
+      setIsPlaying(true);
+      setIsMuted(v.muted);
+      setNeedsTapToStart(false);
+    } catch {
+      setIsPlaying(false);
+      setNeedsTapToStart(true);
+    }
+  };
 
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
 
+    v.setAttribute("playsinline", "true");
+    v.setAttribute("webkit-playsinline", "true");
     v.muted = true;
-    v.playsInline = true;
+    v.defaultMuted = true;
 
-    const startVideo = async () => {
-      try {
-        await v.play();
-        setIsPlaying(true);
-        setShowUnmute(true);
-      } catch {
-        setIsPlaying(false);
-      }
-    };
+    const timer = window.setTimeout(() => {
+      void attemptPlay();
+    }, 250);
 
-    void startVideo();
+    return () => window.clearTimeout(timer);
   }, []);
 
   const togglePlay = async () => {
@@ -320,11 +335,9 @@ function SquareVSLVideo() {
       try {
         await v.play();
         setIsPlaying(true);
+        setNeedsTapToStart(false);
       } catch {
-        v.muted = true;
-        setIsMuted(true);
-        await v.play();
-        setIsPlaying(true);
+        setNeedsTapToStart(true);
       }
     } else {
       v.pause();
@@ -335,16 +348,15 @@ function SquareVSLVideo() {
   const toggleMute = () => {
     const v = videoRef.current;
     if (!v) return;
-
     v.muted = !v.muted;
     setIsMuted(v.muted);
-    if (!v.muted) setShowUnmute(false);
   };
 
   const seek = (seconds: number) => {
     const v = videoRef.current;
     if (!v) return;
-    v.currentTime = Math.max(0, Math.min(v.duration || 0, v.currentTime + seconds));
+    const duration = Number.isFinite(v.duration) ? v.duration : 0;
+    v.currentTime = Math.max(0, Math.min(duration, v.currentTime + seconds));
   };
 
   const toggleCaptions = () => {
@@ -356,94 +368,128 @@ function SquareVSLVideo() {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[390px] sm:max-w-[460px] md:max-w-[560px] lg:max-w-[620px]">
+    <div className="relative mx-auto w-full max-w-[390px] sm:max-w-[430px] md:max-w-[500px] lg:max-w-[540px]">
       <div className="pointer-events-none absolute -inset-4 rounded-[2.2rem] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.45),transparent_62%)] blur-2xl md:-inset-7" />
       <div className="pointer-events-none absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
 
       <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
-        <div className="relative aspect-square w-full">
+        <div className="relative aspect-[9/16] w-full md:aspect-[9/14]">
           <video
             ref={videoRef}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-[center_42%] brightness-[1.03] contrast-[1.06] saturate-[1.04]"
+            style={{
+              filter: "contrast(1.05) saturate(1.05) brightness(1.02)",
+              imageRendering: "auto",
+            }}
             src={VIDEO_SRC}
             autoPlay
             muted
             playsInline
+            loop
+            controls={false}
             preload="auto"
-            onPlay={() => setIsPlaying(true)}
+            onCanPlay={() => {
+              setHasLoaded(true);
+              void attemptPlay();
+            }}
+            onLoadedData={() => setHasLoaded(true)}
+            onPlay={() => {
+              setIsPlaying(true);
+              setNeedsTapToStart(false);
+            }}
             onPause={() => setIsPlaying(false)}
             onEnded={() => setIsPlaying(false)}
+            onError={() => setNeedsTapToStart(true)}
           >
             <track src={CAPTIONS_SRC} kind="captions" srcLang="en" label="English" default />
           </video>
 
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 bg-gradient-to-b from-black/55 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-40 bg-gradient-to-t from-black/76 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-black/55 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-20 bg-gradient-to-t from-black/35 to-transparent" />
 
           <div className="absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.9)]" />
             VSL Training
           </div>
 
-          {showUnmute && isMuted && (
+          {!hasLoaded && (
+            <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/30">
+              <div className="rounded-2xl border border-white/10 bg-black/60 px-4 py-3 text-xs font-black uppercase tracking-[0.18em] text-white/70 backdrop-blur-xl">
+                Loading video...
+              </div>
+            </div>
+          )}
+
+          {needsTapToStart && !isPlaying && hasLoaded && (
+            <button
+              type="button"
+              onClick={togglePlay}
+              className="absolute left-1/2 top-1/2 z-[55] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-2xl border border-white/20 bg-black/78 px-5 py-3 text-sm font-black text-white shadow-[0_0_45px_rgba(255,255,255,0.22)] backdrop-blur-xl transition hover:bg-black/90"
+            >
+              <Play size={18} fill="currentColor" strokeWidth={0} />
+              Tap to start video
+            </button>
+          )}
+
+          {isMuted && isPlaying && (
             <button
               type="button"
               onClick={toggleMute}
-              className="absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-2xl border border-sky-300/35 bg-black/72 px-5 py-3 text-sm font-black text-white shadow-[0_0_45px_rgba(56,189,248,0.38)] backdrop-blur-xl transition hover:bg-black/90"
+              className="absolute left-1/2 top-[58%] z-50 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-2xl border border-sky-300/35 bg-black/72 px-5 py-3 text-sm font-black text-white shadow-[0_0_45px_rgba(56,189,248,0.38)] backdrop-blur-xl transition hover:bg-black/90"
             >
               <Volume2 size={18} className="text-sky-200" />
               Tap to unmute
             </button>
           )}
+        </div>
 
-          <div className="absolute bottom-4 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-2xl border border-white/12 bg-black/58 px-2.5 py-2 text-white shadow-[0_15px_45px_rgba(0,0,0,0.35)] backdrop-blur-xl md:gap-2.5 md:px-3">
-            <button
-              type="button"
-              onClick={() => seek(-5)}
-              aria-label="Rewind 5 seconds"
-              className="flex h-9 min-w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] px-2 text-[11px] font-black text-white/85 transition hover:bg-white/[0.1] md:h-10 md:min-w-10"
-            >
-              -5
-            </button>
+        <div className="relative z-50 flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 px-3 py-3 text-white backdrop-blur-xl md:gap-2.5 md:px-4 md:py-4">
+          <button
+            type="button"
+            onClick={() => seek(-5)}
+            aria-label="Rewind 5 seconds"
+            className="flex h-9 min-w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] px-2 text-[11px] font-black text-white/85 transition hover:bg-white/[0.1] md:h-10 md:min-w-10"
+          >
+            -5
+          </button>
 
-            <button
-              type="button"
-              onClick={togglePlay}
-              aria-label={isPlaying ? "Pause" : "Play"}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-[0_0_28px_rgba(255,255,255,0.28)] transition hover:scale-105 md:h-11 md:w-11"
-            >
-              {isPlaying ? <Pause size={16} /> : <Play size={16} fill="currentColor" strokeWidth={0} />}
-            </button>
+          <button
+            type="button"
+            onClick={togglePlay}
+            aria-label={isPlaying ? "Pause" : "Play"}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-black shadow-[0_0_28px_rgba(255,255,255,0.28)] transition hover:scale-105 md:h-12 md:w-12"
+          >
+            {isPlaying ? <Pause size={17} /> : <Play size={17} fill="currentColor" strokeWidth={0} />}
+          </button>
 
-            <button
-              type="button"
-              onClick={() => seek(5)}
-              aria-label="Skip forward 5 seconds"
-              className="flex h-9 min-w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] px-2 text-[11px] font-black text-white/85 transition hover:bg-white/[0.1] md:h-10 md:min-w-10"
-            >
-              +5
-            </button>
+          <button
+            type="button"
+            onClick={() => seek(5)}
+            aria-label="Skip forward 5 seconds"
+            className="flex h-9 min-w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] px-2 text-[11px] font-black text-white/85 transition hover:bg-white/[0.1] md:h-10 md:min-w-10"
+          >
+            +5
+          </button>
 
-            <div className="mx-0.5 h-7 w-px bg-white/12" />
+          <div className="mx-0.5 h-7 w-px bg-white/12" />
 
-            <button
-              type="button"
-              onClick={toggleMute}
-              aria-label={isMuted ? "Unmute" : "Mute"}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] text-white transition hover:bg-white/[0.1] md:h-10 md:w-10"
-            >
-              {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
-            </button>
+          <button
+            type="button"
+            onClick={toggleMute}
+            aria-label={isMuted ? "Unmute" : "Mute"}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.055] text-white transition hover:bg-white/[0.1] md:h-10 md:w-10"
+          >
+            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+          </button>
 
-            <button
-              type="button"
-              onClick={toggleCaptions}
-              aria-label="Toggle captions"
-              className={`flex h-9 w-9 items-center justify-center rounded-full border transition md:h-10 md:w-10 ${captionsOn ? "border-sky-300/40 bg-sky-400/25 text-sky-100" : "border-white/15 bg-white/[0.055] text-white"}`}
-            >
-              <Captions size={15} />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={toggleCaptions}
+            aria-label="Toggle captions"
+            className={`flex h-9 w-9 items-center justify-center rounded-full border transition md:h-10 md:w-10 ${captionsOn ? "border-sky-300/40 bg-sky-400/25 text-sky-100" : "border-white/15 bg-white/[0.055] text-white"}`}
+          >
+            <Captions size={15} />
+          </button>
         </div>
       </div>
     </div>
