@@ -293,35 +293,15 @@ function SquareVSLVideo() {
 
       <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
         <div className="relative aspect-[9/16] w-full overflow-hidden md:aspect-[9/14]">
-          <script src="https://fast.wistia.com/player.js" async></script>
-          <script
-            src="https://fast.wistia.com/embed/48i7dt9tre.js"
-            async
-            type="module"
-          ></script>
-
-          <style jsx>{`
-            wistia-player[media-id='48i7dt9tre']:not(:defined) {
-              background: center / cover no-repeat url('https://fast.wistia.com/embed/medias/48i7dt9tre/swatch');
-              display: block;
-              filter: blur(6px);
-              width: 100%;
-              height: 100%;
-            }
-          `}</style>
-
-          <wistia-player
-            media-id="48i7dt9tre"
-            aspect="0.5625"
-            autoplay="true"
-            muted="true"
-            controls-visible-on-load="false"
-            playbar="true"
-            fullscreen-button="true"
-            volume-control="true"
-            small-play-button="false"
+          <iframe
+            title="ConvertIQ VSL"
+            src="https://fast.wistia.net/embed/iframe/48i7dt9tre?autoplay=1&muted=1&seo=false&videoFoam=true&playsinline=1"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            frameBorder="0"
+            scrolling="no"
             className="absolute inset-0 h-full w-full"
-          ></wistia-player>
+          />
 
           <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-black/45 to-transparent" />
 
