@@ -23,6 +23,50 @@ import {
   Zap,
 } from "lucide-react";
 import { useLockedSectionProgress } from "@/components/useLockedSectionProgress";
+import { eventId, trackServerEvent } from "@/lib/meta";
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+    _fbq?: unknown;
+  }
+}
+
+const META_PIXEL_ID = "1727624242014302";
+
+function loadMetaPixel() {
+  if (typeof window === "undefined") return;
+  if (window.fbq) return;
+
+  const fbq = function (...args: unknown[]) {
+    // @ts-expect-error Meta pixel queue is attached dynamically.
+    fbq.callMethod ? fbq.callMethod(...args) : fbq.queue.push(args);
+  } as typeof window.fbq & { queue?: unknown[]; loaded?: boolean; version?: string };
+
+  fbq.queue = [];
+  fbq.loaded = true;
+  fbq.version = "2.0";
+
+  window.fbq = fbq;
+  window._fbq = fbq;
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = "https://connect.facebook.net/en_US/fbevents.js";
+  document.head.appendChild(script);
+
+  window.fbq("init", META_PIXEL_ID);
+  window.fbq("track", "PageView");
+}
+
+function trackMetaEvent(eventName: "ViewContent" | "Lead" | "Schedule", customData?: Record<string, unknown>) {
+  if (typeof window === "undefined") return;
+
+  const id = eventId(eventName);
+
+  window.fbq?.("track", eventName, customData || {}, { eventID: id });
+  void trackServerEvent(eventName, id, customData);
+}
 
 /*
   SETUP
@@ -45,10 +89,10 @@ const VIDEO_SRC = "/vsl-ugc-portrait.mp4";
 const CAPTIONS_SRC = "/vsl-captions.vtt";
 
 const clientLogos = [
-  "/Clients/Summit Roofing.png",
-  "/Clients/Clearflow Plumbing.png",
-  "/Clients/Multi Logo.png",
-  "/Clients/mrgutter.png",
+  "/clients/Summit Roofing.png",
+  "/clients/Clearflow Plumbing.png",
+  "/clients/Multi Logo.png",
+  "/clients/mrgutter.png",
 ];
 
 const benefits = [
@@ -223,7 +267,17 @@ function MagneticCTA({
   );
 }
 
-function TypeformModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+function TypeformModal({
+  open,
+  onClose,
+  onLeadSubmit,
+  onScheduleBooked,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onLeadSubmit: () => void;
+  onScheduleBooked: () => void;
+}) {
   useEffect(() => {
     if (!open) return;
     const original = document.body.style.overflow;
@@ -233,12 +287,28 @@ function TypeformModal({ open, onClose }: { open: boolean; onClose: () => void }
       if (e.key === "Escape") onClose();
     };
 
+    const onMessage = (event: MessageEvent) => {
+      const origin = event.origin || "";
+      const raw = typeof event.data === "string" ? event.data : JSON.stringify(event.data || {});
+      const lower = raw.toLowerCase();
+
+      if (origin.includes("typeform.com") && (lower.includes("submit") || lower.includes("form-submit") || lower.includes("form_submit"))) {
+        onLeadSubmit();
+      }
+
+      if (origin.includes("calendly.com") && (lower.includes("calendly.event_scheduled") || lower.includes("event_scheduled"))) {
+        onScheduleBooked();
+      }
+    };
+
     window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("message", onMessage);
     return () => {
       document.body.style.overflow = original;
       window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("message", onMessage);
     };
-  }, [open, onClose]);
+  }, [open, onClose, onLeadSubmit, onScheduleBooked]);
 
   if (!open) return null;
 
@@ -287,21 +357,15 @@ function TypeformModal({ open, onClose }: { open: boolean; onClose: () => void }
 
 function SquareVSLVideo() {
   return (
-    <div className="relative mx-auto w-full max-w-[390px] sm:max-w-[430px] md:max-w-[520px] lg:max-w-[560px]">
-      {/* Glow */}
-      <div className="pointer-events-none absolute -inset-5 rounded-[2.5rem] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.45),transparent_62%)] blur-3xl md:-inset-8" />
+    <div className="relative mx-auto w-full max-w-[390px] sm:max-w-[430px] md:max-w-[500px] lg:max-w-[540px]">
+      <div className="pointer-events-none absolute -inset-4 rounded-[2.2rem] bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.45),transparent_62%)] blur-2xl md:-inset-7" />
+      <div className="pointer-events-none absolute -inset-1 rounded-[2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
 
-      <div className="pointer-events-none absolute -inset-1 rounded-[2.2rem] bg-gradient-to-br from-blue-400/40 via-purple-400/30 to-fuchsia-400/30 opacity-70 blur" />
-
-      {/* Main Frame */}
-      <div className="relative overflow-hidden rounded-[1.7rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2.2rem]">
-        
-        <div className="relative aspect-[9/17.5] w-full overflow-hidden md:aspect-[9/17]">
-          
-          {/* Wistia Video */}
+      <div className="relative overflow-hidden rounded-[1.5rem] border border-white/15 bg-black shadow-[0_35px_120px_rgba(59,130,246,0.35),0_18px_70px_rgba(168,85,247,0.24)] md:rounded-[2rem]">
+        <div className="relative aspect-[9/16] w-full overflow-hidden md:aspect-[9/14]">
           <iframe
             title="ConvertIQ VSL"
-            src="https://fast.wistia.net/embed/iframe/48i7dt9tre?autoplay=1&muted=1&seo=false&videoFoam=true&playsinline=1&controlsVisibleOnLoad=true&playbar=true&volumeControl=true&fullscreenButton=true&smallPlayButton=true&playButton=true"
+            src="https://fast.wistia.net/embed/iframe/48i7dt9tre?autoPlay=true&muted=true&seo=false&videoFoam=true&playsinline=true&controlsVisibleOnLoad=true&playbar=true&volumeControl=true&fullscreenButton=true&smallPlayButton=true&playButton=true"
             allow="autoplay; fullscreen"
             allowFullScreen
             frameBorder="0"
@@ -309,10 +373,8 @@ function SquareVSLVideo() {
             className="absolute inset-0 h-full w-full"
           />
 
-          {/* Top Gradient */}
           <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-black/45 to-transparent" />
 
-          {/* VSL Badge */}
           <div className="pointer-events-none absolute left-3 top-3 z-30 flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.9)]" />
             VSL Training
@@ -740,8 +802,37 @@ function PageScrollBar() {
 
 export function VSLContent() {
   const [isTypeformOpen, setIsTypeformOpen] = useState(false);
+  const hasTrackedLead = useRef(false);
+  const hasTrackedSchedule = useRef(false);
+
   const openTypeform = () => setIsTypeformOpen(true);
   const closeTypeform = () => setIsTypeformOpen(false);
+
+  const trackLeadSubmit = () => {
+    if (hasTrackedLead.current) return;
+    hasTrackedLead.current = true;
+    trackMetaEvent("Lead", {
+      content_name: "ConvertIQ Strategy Application",
+      funnel_step: "typeform_submit",
+    });
+  };
+
+  const trackScheduleBooked = () => {
+    if (hasTrackedSchedule.current) return;
+    hasTrackedSchedule.current = true;
+    trackMetaEvent("Schedule", {
+      content_name: "ConvertIQ Strategy Call",
+      funnel_step: "calendly_booked",
+    });
+  };
+  useEffect(() => {
+    loadMetaPixel();
+    trackMetaEvent("ViewContent", {
+      content_name: "ConvertIQ VSL",
+      funnel_step: "vsl_page_view",
+    });
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined" || !window.location.hash) return;
     const el = document.querySelector(window.location.hash);
@@ -754,7 +845,12 @@ export function VSLContent() {
     <div className="relative bg-black text-white">
       <PageScrollBar />
       <StickyMobileCTA onApplyClick={openTypeform} />
-      <TypeformModal open={isTypeformOpen} onClose={closeTypeform} />
+      <TypeformModal
+        open={isTypeformOpen}
+        onClose={closeTypeform}
+        onLeadSubmit={trackLeadSubmit}
+        onScheduleBooked={trackScheduleBooked}
+      />
       <Hero onApplyClick={openTypeform} />
       <TrustedBy />
       <Benefits />
