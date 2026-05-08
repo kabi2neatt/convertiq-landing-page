@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion, MotionValue, useTransform } from "framer-motion";
+import React, { useRef } from "react";
+import { motion, MotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import {
   ArrowUpRight,
   BarChart3,
@@ -13,7 +13,6 @@ import {
   Target,
   TrendingUp,
 } from "lucide-react";
-import { useLockedSectionProgress } from "@/components/useLockedSectionProgress";
 
 const fixes = [
   "Campaign structure rebuilt",
@@ -89,7 +88,16 @@ function AnimatedChart({ progress }: { progress: MotionValue<number> }) {
 }
 
 export function CaseStudyShowcase() {
-  const { ref, progress } = useLockedSectionProgress({ speed: 0.00112 });
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.22,
+  });
 
   const headingY = useTransform(progress, [0, 0.09], [50, 0]);
   const headingScale = useTransform(progress, [0, 0.09], [0.96, 1]);
@@ -101,8 +109,8 @@ export function CaseStudyShowcase() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="case-study" ref={ref as React.RefObject<HTMLElement>} className="relative min-h-screen bg-black text-white">
-      <div className="min-h-screen overflow-visible">
+    <section id="case-study" ref={ref} className="relative min-h-[220svh] bg-black text-white">
+      <div className="sticky top-0 min-h-screen overflow-visible">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.22),transparent_32%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_34%)]" />
         <motion.div style={{ x: glowX }} className="pointer-events-none absolute top-0 h-full w-[35vw] -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent blur-xl" />
 

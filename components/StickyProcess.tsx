@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion, MotionValue, useTransform } from "framer-motion";
-import { useLockedSectionProgress } from "@/components/useLockedSectionProgress";
+import React, { useRef } from "react";
+import { motion, MotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 
 const steps = [
   { label: "01", title: "Diagnose the funnel", text: "We review your website, ads, offer, tracking, and lead flow to find what is blocking booked jobs." },
@@ -30,7 +29,16 @@ function StepCard({ step, index, progress }: { step: (typeof steps)[number]; ind
 }
 
 export function StickyProcess() {
-  const { ref, progress } = useLockedSectionProgress({ speed: 0.0012 });
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.22,
+  });
   const headingOpacity = useTransform(progress, [0, 0.1], [0, 1]);
   const headingY = useTransform(progress, [0, 0.1], [70, 0]);
   const cardY = useTransform(progress, [0.12, 0.25], [90, 0]);
@@ -38,8 +46,8 @@ export function StickyProcess() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="process" ref={ref as React.RefObject<HTMLElement>} className="relative h-screen bg-black text-white">
-      <div className="flex h-screen items-center overflow-hidden px-5 py-20 md:px-6">
+    <section id="process" ref={ref} className="relative h-[220svh] bg-black text-white">
+      <div className="sticky top-0 flex h-screen items-center overflow-hidden px-5 py-20 md:px-6">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(124,58,237,0.22),transparent_34%),radial-gradient(circle_at_bottom,rgba(37,99,235,0.16),transparent_36%)]" />
         <div className="relative mx-auto grid w-full max-w-7xl items-center gap-9 lg:grid-cols-[0.85fr_1.15fr]">
           <motion.div style={{ opacity: headingOpacity, y: headingY }} className="text-center lg:text-left">

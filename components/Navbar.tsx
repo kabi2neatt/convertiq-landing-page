@@ -107,7 +107,7 @@ export function Navbar() {
 
   return (
     <header className="fixed left-0 top-0 z-[1000] w-full border-b border-white/10 bg-black/85 backdrop-blur-xl">
-      <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-5 md:px-10">
+      <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-2 px-3 md:h-[88px] md:px-10">
         <Link href="/" className="flex items-center">
           <motion.div
             className="relative"
@@ -132,7 +132,7 @@ export function Navbar() {
               alt="ConvertIQ Media"
               width={160}
               height={70}
-              className="relative z-10 h-[64px] w-auto object-contain"
+              className="relative z-10 h-[52px] w-auto object-contain md:h-[64px]"
               priority
             />
           </motion.div>
@@ -251,16 +251,101 @@ export function Navbar() {
           </MagneticButton>
         </nav>
 
-        <MagneticButton className="md:hidden">
+        <div className="flex min-w-0 items-center gap-2 md:hidden">
+          <a
+            href="#home"
+            className="rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+          >
+            Home
+          </a>
+
+          <div className="relative flex min-w-0 flex-1 justify-center">
+            <button
+              type="button"
+              onClick={() => setOpen((prev) => !prev)}
+              className="max-w-[128px] truncate rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+            >
+              Navigation ↓
+            </button>
+
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.96 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute left-1/2 top-full mt-3 w-[calc(100vw-1.5rem)] max-w-[360px] -translate-x-1/2 overflow-hidden rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)] backdrop-blur-2xl"
+                >
+                  {items.map((item) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className="group flex gap-3 rounded-xl px-3 py-3 text-white/90 hover:bg-white/10"
+                      >
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600/30 to-purple-600/30 text-purple-200 ring-1 ring-white/10">
+                          <Icon size={16} />
+                        </div>
+
+                        <div>
+                          <div className="text-sm font-bold text-white">
+                            {item.title}
+                          </div>
+                          <p className="mt-0.5 text-xs leading-4 text-white/55">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      window.dispatchEvent(
+                        new CustomEvent("open-convertiq-form", {
+                          detail: { type: "demo" },
+                        })
+                      );
+                    }}
+                    className="block w-full rounded-xl px-3 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
+                  >
+                    Free Website Demo
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpen(false);
+                      window.dispatchEvent(
+                        new CustomEvent("open-convertiq-form", {
+                          detail: { type: "audit" },
+                        })
+                      );
+                    }}
+                    className="block w-full rounded-xl px-3 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
+                  >
+                    Free Google Ads Audit
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <a
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="block rounded-lg bg-[#38bdf8] px-5 py-2.5 text-[13px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+            className="shrink-0 rounded-xl bg-[#38bdf8] px-3 py-2.5 text-[12px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
           >
-            Book Call
+            Book
           </a>
-        </MagneticButton>
+        </div>
       </div>
     </header>
   );

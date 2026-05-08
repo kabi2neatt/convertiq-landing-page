@@ -1,8 +1,8 @@
 // components/FAQSection.tsx
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
 const faqs = [
@@ -40,15 +40,25 @@ function FAQItem({
   index: number;
 }) {
   const [open, setOpen] = useState(index === 0);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const isInView = useInView(ref, {
+    once: true,
+    amount: 0.12,
+    margin: "0px 0px -8% 0px",
+  });
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 45, scale: 0.96 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
+      animate={
+        isInView
+          ? { opacity: 1, y: 0, scale: 1 }
+          : { opacity: 0, y: 45, scale: 0.96 }
+      }
       transition={{
         duration: 0.55,
-        delay: index * 0.08,
+        delay: index * 0.06,
         ease: [0.22, 1, 0.36, 1],
       }}
       className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.045] shadow-[0_30px_120px_rgba(37,99,235,0.14)] backdrop-blur-xl"
@@ -84,6 +94,41 @@ function FAQItem({
   );
 }
 
+function FAQHeader() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const isInView = useInView(ref, {
+    once: true,
+    amount: 0.18,
+    margin: "0px 0px -8% 0px",
+  });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 45 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 45 }}
+      transition={{ duration: 0.65 }}
+      className="mx-auto mb-12 max-w-3xl text-center"
+    >
+      <div className="mb-5 inline-flex rounded-full border border-purple-400/25 bg-white/[0.04] px-5 py-2 text-[10px] font-black uppercase tracking-[0.28em] text-purple-200 md:text-xs">
+        FAQ
+      </div>
+
+      <h2 className="text-4xl font-black leading-[0.92] tracking-[-0.07em] md:text-7xl">
+        Frequently Asked{" "}
+        <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
+          Questions.
+        </span>
+      </h2>
+
+      <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/65 md:text-lg">
+        Common questions about Google Ads, lead generation, website demos,
+        and working with ConvertIQ Media.
+      </p>
+    </motion.div>
+  );
+}
+
 export function FAQSection() {
   return (
     <section
@@ -93,29 +138,7 @@ export function FAQSection() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.18),transparent_35%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.14),transparent_38%)]" />
 
       <div className="relative mx-auto max-w-5xl">
-        <motion.div
-          initial={{ opacity: 0, y: 45 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.65 }}
-          className="mx-auto mb-12 max-w-3xl text-center"
-        >
-          <div className="mb-5 inline-flex rounded-full border border-purple-400/25 bg-white/[0.04] px-5 py-2 text-[10px] font-black uppercase tracking-[0.28em] text-purple-200 md:text-xs">
-            FAQ
-          </div>
-
-          <h2 className="text-4xl font-black leading-[0.92] tracking-[-0.07em] md:text-7xl">
-            Frequently Asked{" "}
-            <span className="bg-gradient-to-r from-blue-300 via-purple-300 to-fuchsia-300 bg-clip-text text-transparent">
-              Questions.
-            </span>
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/65 md:text-lg">
-            Common questions about Google Ads, lead generation, website demos,
-            and working with ConvertIQ Media.
-          </p>
-        </motion.div>
+        <FAQHeader />
 
         <div className="grid gap-4">
           {faqs.map((faq, index) => (
