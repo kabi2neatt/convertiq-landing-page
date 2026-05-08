@@ -269,7 +269,21 @@ function MagneticCTA({
           {children}
         </button>
       ) : (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={sharedClass}>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={sharedClass}
+          onClick={() => {
+            if (href?.includes("calendly.com")) {
+              trackMetaEvent("Schedule", {
+                content_name: "Book Call",
+                funnel_step: "calendly_click",
+                destination: href,
+              });
+            }
+          }}
+        >
           {children}
         </a>
       )}
