@@ -38,10 +38,20 @@ function loadMetaPixel() {
   if (typeof window === "undefined") return;
   if (window.fbq) return;
 
+  type FbqFunction = ((...args: unknown[]) => void) & {
+    callMethod?: (...args: unknown[]) => void;
+    queue: unknown[][];
+    loaded: boolean;
+    version: string;
+  };
+
   const fbq = function (...args: unknown[]) {
-    // @ts-expect-error Meta pixel queue is attached dynamically.
-    fbq.callMethod ? fbq.callMethod(...args) : fbq.queue.push(args);
-  } as typeof window.fbq & { queue?: unknown[]; loaded?: boolean; version?: string };
+    if (fbq.callMethod) {
+      fbq.callMethod(...args);
+    } else {
+      fbq.queue.push(args);
+    }
+  } as FbqFunction;
 
   fbq.queue = [];
   fbq.loaded = true;
@@ -89,10 +99,10 @@ const VIDEO_SRC = "/vsl-ugc-portrait.mp4";
 const CAPTIONS_SRC = "/vsl-captions.vtt";
 
 const clientLogos = [
-  "/Clients/Summit Roofing.png",
-  "/Clients/Clearflow Plumbing.png",
-  "/Clients/Multi Logo.png",
-  "/Clients/mrgutter.png",
+  "/clients/Summit Roofing.png",
+  "/clients/Clearflow Plumbing.png",
+  "/clients/Multi Logo.png",
+  "/clients/mrgutter.png",
 ];
 
 const benefits = [
