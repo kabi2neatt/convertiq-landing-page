@@ -26,10 +26,11 @@ export async function POST(req: NextRequest) {
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: [event] }),
-    }
-  );
+      body: JSON.stringify({
+  data: [event],
+    }),
 
   const data = await res.json();
   return NextResponse.json(data);
+}
 }
