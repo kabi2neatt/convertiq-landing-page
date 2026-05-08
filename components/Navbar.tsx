@@ -11,12 +11,33 @@ import {
   LayoutDashboard,
   Users,
   ShieldCheck,
-  ClipboardCheck,
-  Zap,
   FileText,
 } from "lucide-react";
+import { eventId, trackServerEvent } from "@/lib/meta";
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
+}
 
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
+
+function trackScheduleEvent() {
+  if (typeof window === "undefined") return;
+
+  const id = eventId("Schedule");
+
+  const customData = {
+    content_name: "Book Call",
+    funnel_step: "navbar_calendly_click",
+    destination: CALENDLY_URL,
+  };
+
+  window.fbq?.("track", "Schedule", customData, { eventID: id });
+
+  void trackServerEvent("Schedule", id, customData);
+}
 
 function MagneticButton({
   children,
@@ -244,6 +265,7 @@ export function Navbar() {
               href={CALENDLY_URL}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={trackScheduleEvent}
               className="block rounded-xl bg-[#38bdf8] px-7 py-3 text-[14px] font-semibold text-black shadow-[0_0_30px_rgba(56,189,248,0.35)] transition hover:bg-sky-300"
             >
               Book Call
@@ -341,6 +363,7 @@ export function Navbar() {
             href={CALENDLY_URL}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={trackScheduleEvent}
             className="shrink-0 rounded-xl bg-[#38bdf8] px-3 py-2.5 text-[12px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
           >
             Book
