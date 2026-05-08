@@ -38,10 +38,20 @@ function loadMetaPixel() {
   if (typeof window === "undefined") return;
   if (window.fbq) return;
 
+  type FbqFunction = ((...args: unknown[]) => void) & {
+    callMethod?: (...args: unknown[]) => void;
+    queue: unknown[][];
+    loaded: boolean;
+    version: string;
+  };
+
   const fbq = function (...args: unknown[]) {
-    // @ts-expect-error Meta pixel queue is attached dynamically.
-    fbq.callMethod ? fbq.callMethod(...args) : fbq.queue.push(args);
-  } as typeof window.fbq & { queue?: unknown[]; loaded?: boolean; version?: string };
+    if (fbq.callMethod) {
+      fbq.callMethod(...args);
+    } else {
+      fbq.queue.push(args);
+    }
+  } as FbqFunction;
 
   fbq.queue = [];
   fbq.loaded = true;
