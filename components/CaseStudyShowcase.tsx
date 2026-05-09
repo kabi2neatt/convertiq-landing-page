@@ -35,8 +35,8 @@ const storyCards = [
 ];
 
 function RevealItem({ children, index, progress }: { children: React.ReactNode; index: number; progress: MotionValue<number> }) {
-  const start = 0.1 + index * 0.045;
-  const end = Math.min(start + 0.13, 1);
+  const start = 0.07 + index * 0.032;
+  const end = Math.min(start + 0.1, 0.88);
   const opacity = useTransform(progress, [start, end], [0, 1]);
   const y = useTransform(progress, [start, end], [45, 0]);
   const scale = useTransform(progress, [start, end], [0.94, 1]);
@@ -45,8 +45,8 @@ function RevealItem({ children, index, progress }: { children: React.ReactNode; 
 
 function StatTile({ stat, index, progress }: { stat: (typeof stats)[number]; index: number; progress: MotionValue<number> }) {
   const Icon = stat.icon;
-  const start = 0.44 + index * 0.07;
-  const end = Math.min(start + 0.13, 1);
+  const start = 0.34 + index * 0.05;
+  const end = Math.min(start + 0.1, 0.88);
   const opacity = useTransform(progress, [start, end], [0, 1]);
   const y = useTransform(progress, [start, end], [38, 0]);
   const scale = useTransform(progress, [start, end], [0.9, 1]);
@@ -93,10 +93,11 @@ export function CaseStudyShowcase() {
     target: ref,
     offset: ["start start", "end end"],
   });
+
   const progress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 24,
-    mass: 0.22,
+    stiffness: 145,
+    damping: 28,
+    mass: 0.16,
   });
 
   const headingY = useTransform(progress, [0, 0.09], [50, 0]);
@@ -109,7 +110,7 @@ export function CaseStudyShowcase() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="case-study" ref={ref} className="relative min-h-[220svh] bg-black text-white">
+    <section id="case-study" ref={ref} className="relative min-h-[165svh] bg-black text-white md:min-h-[155vh]">
       <div className="sticky top-0 min-h-screen overflow-visible">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.22),transparent_32%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.18),transparent_34%)]" />
         <motion.div style={{ x: glowX }} className="pointer-events-none absolute top-0 h-full w-[35vw] -skew-x-12 bg-gradient-to-r from-transparent via-white/[0.04] to-transparent blur-xl" />
