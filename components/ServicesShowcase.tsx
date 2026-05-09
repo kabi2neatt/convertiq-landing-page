@@ -14,9 +14,9 @@ const services = [
 
 function ServiceCard({ service, index, progress, mobile = false }: { service: (typeof services)[number]; index: number; progress: MotionValue<number>; mobile?: boolean }) {
   const [title, Icon, text] = service;
-  const start = mobile ? 0.08 + index * 0.16 : 0.12 + index * 0.09;
-  const mid = start + 0.11;
-  const end = Math.min(start + 0.23, 1);
+  const start = mobile ? 0.05 + index * 0.12 : 0.1 + index * 0.08;
+  const mid = start + (mobile ? 0.08 : 0.1);
+  const end = Math.min(start + (mobile ? 0.16 : 0.2), 0.88);
   const opacity = useTransform(progress, [start, mid, end], [0, 1, mobile && index !== services.length - 1 ? 0 : 1]);
   const y = useTransform(progress, [start, mid, end], [90, 0, mobile && index !== services.length - 1 ? -70 : 0]);
   const scale = useTransform(progress, [start, mid, end], [0.88, 1, mobile && index !== services.length - 1 ? 0.94 : 1]);
@@ -47,10 +47,11 @@ export function ServicesShowcase() {
     target: ref,
     offset: ["start start", "end end"],
   });
+
   const progress = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 24,
-    mass: 0.22,
+    stiffness: 145,
+    damping: 28,
+    mass: 0.16,
   });
   const headingOpacity = useTransform(progress, [0, 0.1], [0, 1]);
   const headingY = useTransform(progress, [0, 0.1], [70, 0]);
@@ -59,7 +60,7 @@ export function ServicesShowcase() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="services" ref={ref} className="relative h-[220svh] bg-black text-white">
+    <section id="services" ref={ref} className="relative h-[165svh] bg-black text-white md:h-[155vh]">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden px-5 py-20 md:px-6">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.2),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.16),transparent_32%)]" />
         <div className="relative mx-auto w-full max-w-7xl">
