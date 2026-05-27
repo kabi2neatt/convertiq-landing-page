@@ -10,6 +10,7 @@ import { StickyProcess } from "@/components/StickyProcess";
 import { ServicesShowcase } from "@/components/ServicesShowcase";
 import { CaseStudyShowcase } from "@/components/CaseStudyShowcase";
 import { WhyConvertIQ } from "@/components/WhyConvertIQ";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import { FAQSection } from "@/components/FAQSection";
 import { ContactForm } from "@/components/ContactForm";
@@ -33,6 +34,7 @@ export default function Home() {
       <CaseStudyShowcase />
       <AnimatedDivider />
       <WhyConvertIQ />
+      <TestimonialsSection />
       <ProjectsSection />
       <FAQSection />
       <ContactForm />
