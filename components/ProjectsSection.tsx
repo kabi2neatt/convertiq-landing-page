@@ -31,6 +31,15 @@ const projects = [
     url: "#",
     tags: ["Demo Website", "Cafe", "Brand Design"],
   },
+  {
+    title: "Newcastle Roofing",
+    industry: "Roofing Company",
+    description:
+      "A modern roofing website demo focused on quote generation, strong service positioning, and a clean mobile-first layout for local homeowners.",
+    image: "/projects/newcastle-roofing.jpg",
+    url: "#",
+    tags: ["Roofing", "Web Design", "Quote Funnel"],
+  },
 ];
 
 export default function ProjectsSection() {
@@ -54,7 +63,7 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {projects.map((project) => (
             <article
               key={project.title}
@@ -66,6 +75,7 @@ export default function ProjectsSection() {
                   alt={project.title}
                   fill
                   className="object-cover transition duration-500 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
               </div>
