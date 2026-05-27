@@ -44,7 +44,10 @@ const projects = [
 
 export default function ProjectsSection() {
   return (
-    <section className="relative overflow-hidden bg-black px-6 py-24 text-white">
+    <section
+  id="projects"
+  className="relative overflow-hidden bg-black px-6 py-24 text-white"
+>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#1d4ed833,transparent_35%),radial-gradient(circle_at_bottom_right,#9333ea22,transparent_35%)]" />
 
       <div className="relative mx-auto max-w-7xl">

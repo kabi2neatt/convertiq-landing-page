@@ -75,7 +75,7 @@ export function WhyConvertIQ() {
   const progressWidth = useTransform(progress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="why-us" ref={ref as React.RefObject<HTMLElement>} className="relative min-h-screen bg-black text-white">
+    <section id="why-convertiq" ref={ref as React.RefObject<HTMLElement>} className="relative min-h-screen bg-black text-white">
       <div className="flex min-h-screen items-center overflow-visible px-4 py-20 md:px-6 md:py-28">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.18),transparent_34%),radial-gradient(circle_at_bottom,rgba(168,85,247,0.14),transparent_35%)]" />
 

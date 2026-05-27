@@ -112,6 +112,7 @@ export default function TestimonialsSection() {
 
   return (
     <section
+    id="testimonials"
       ref={sectionRef}
       className="relative overflow-hidden border-t border-white/10 bg-black px-6 py-24 text-white md:py-28"
     >
