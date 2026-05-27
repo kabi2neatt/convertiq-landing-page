@@ -12,6 +12,7 @@ import {
   Users,
   ShieldCheck,
   FileText,
+  Star,
 } from "lucide-react";
 import { eventId, trackServerEvent } from "@/lib/meta";
 
@@ -101,22 +102,28 @@ export function Navbar() {
       desc: "How we turn traffic into booked jobs.",
     },
     {
-      href: "#case-study",
-      icon: BarChart3,
-      title: "Case Study",
-      desc: "See how wasted spend becomes qualified leads.",
+      href: "#why-convertiq",
+      icon: ShieldCheck,
+      title: "Why ConvertIQ",
+      desc: "Why businesses choose us for lead generation.",
     },
     {
-      href: "#why-us",
-      icon: ShieldCheck,
-      title: "Why Us?",
-      desc: "Why ConvertIQ is built for local lead gen.",
+      href: "#projects",
+      icon: BarChart3,
+      title: "Projects",
+      desc: "Recent websites and client demo builds.",
+    },
+    {
+      href: "#testimonials",
+      icon: Star,
+      title: "Testimonials",
+      desc: "5-star feedback from local businesses.",
     },
     {
       href: "#faq",
       icon: HelpCircle,
       title: "FAQ",
-      desc: "Common questions before booking.",
+      desc: "Answers before booking a strategy call.",
     },
     {
       href: "/privacy-policy",
@@ -181,11 +188,11 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 14, scale: 0.96 }}
                   transition={{ duration: 0.22 }}
-                  className="absolute left-1/2 top-full mt-6 w-[760px] -translate-x-1/2 overflow-hidden rounded-3xl border border-white/10 bg-black/90 p-3 shadow-[0_30px_120px_rgba(79,70,229,0.32)] backdrop-blur-2xl"
+                  className="absolute left-1/2 top-full mt-6 w-[860px] -translate-x-1/2 overflow-hidden rounded-3xl border border-white/10 bg-black/90 p-3 shadow-[0_30px_120px_rgba(79,70,229,0.32)] backdrop-blur-2xl"
                 >
                   <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(79,70,229,0.28),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.18),transparent_35%)]" />
 
-                  <div className="relative grid grid-cols-3 gap-2">
+                  <div className="relative grid grid-cols-4 gap-2">
                     {items.map((item) => {
                       const Icon = item.icon;
 
@@ -297,7 +304,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.96 }}
                   transition={{ duration: 0.18 }}
-                  className="absolute left-1/2 top-full mt-3 w-[calc(100vw-1.5rem)] max-w-[360px] -translate-x-1/2 overflow-hidden rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)] backdrop-blur-2xl"
+                  className="absolute left-1/2 top-full mt-3 max-h-[75vh] w-[calc(100vw-1.5rem)] max-w-[380px] -translate-x-1/2 overflow-y-auto rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)] backdrop-blur-2xl"
                 >
                   {items.map((item) => {
                     const Icon = item.icon;
