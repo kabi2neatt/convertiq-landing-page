@@ -40,6 +40,16 @@ function trackScheduleEvent() {
   void trackServerEvent("Schedule", id, customData);
 }
 
+function openConvertIQForm(type: "demo" | "audit") {
+  if (typeof window === "undefined") return;
+
+  window.dispatchEvent(
+    new CustomEvent("open-convertiq-form", {
+      detail: { type },
+    })
+  );
+}
+
 function MagneticButton({
   children,
   className = "",
@@ -76,6 +86,51 @@ function MagneticButton({
     >
       {children}
     </motion.div>
+  );
+}
+
+function NavCTAButton({
+  children,
+  variant,
+  onClick,
+  href,
+}: {
+  children: React.ReactNode;
+  variant: "sky" | "blue" | "purple";
+  onClick?: () => void;
+  href?: string;
+}) {
+  const styles = {
+    sky: "bg-[#38bdf8] text-black shadow-[0_0_30px_rgba(56,189,248,0.35)] hover:bg-[#7dd3fc]",
+    blue: "bg-[#1600b8] text-white shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:bg-blue-700",
+    purple:
+      "bg-[#8b45d9] text-white shadow-[0_0_30px_rgba(168,85,247,0.3)] hover:bg-purple-500",
+  };
+
+  const className = `block rounded-xl px-5 py-3 text-[13px] font-black transition ${styles[variant]}`;
+
+  if (href) {
+    return (
+      <MagneticButton>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={trackScheduleEvent}
+          className={className}
+        >
+          {children}
+        </a>
+      </MagneticButton>
+    );
+  }
+
+  return (
+    <MagneticButton>
+      <button type="button" onClick={onClick} className={className}>
+        {children}
+      </button>
+    </MagneticButton>
   );
 }
 
@@ -166,7 +221,7 @@ export function Navbar() {
           </motion.div>
         </Link>
 
-        <nav className="hidden items-center gap-8 text-[15px] font-semibold text-white md:flex">
+        <nav className="hidden items-center gap-4 text-[15px] font-semibold text-white md:flex">
           <Link href="#home" className="transition hover:text-purple-300">
             Home
           </Link>
@@ -235,49 +290,25 @@ export function Navbar() {
             </AnimatePresence>
           </div>
 
-          <MagneticButton>
-            <button
-              type="button"
-              onClick={() => {
-                window.dispatchEvent(
-                  new CustomEvent("open-convertiq-form", {
-                    detail: { type: "demo" },
-                  })
-                );
-              }}
-              className="block rounded-xl bg-[#1600b8] px-7 py-3 text-[14px] font-semibold text-white shadow-[0_0_30px_rgba(37,99,235,0.3)] transition hover:bg-blue-700"
-            >
-              Get A Free Demo
-            </button>
-          </MagneticButton>
+          <div className="ml-1 flex items-center gap-2">
+            <NavCTAButton href={CALENDLY_URL} variant="sky">
+              Book Free Strategy Call ↗
+            </NavCTAButton>
 
-          <MagneticButton>
-            <button
-              type="button"
-              onClick={() => {
-                window.dispatchEvent(
-                  new CustomEvent("open-convertiq-form", {
-                    detail: { type: "audit" },
-                  })
-                );
-              }}
-              className="block rounded-xl bg-[#8b45d9] px-7 py-3 text-[14px] font-semibold text-white shadow-[0_0_30px_rgba(168,85,247,0.3)] transition hover:bg-purple-500"
+            <NavCTAButton
+              onClick={() => openConvertIQForm("demo")}
+              variant="blue"
             >
-              Free Google Ads Audit
-            </button>
-          </MagneticButton>
+              Get Free Website Demo ↓
+            </NavCTAButton>
 
-          <MagneticButton>
-            <a
-              href={CALENDLY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={trackScheduleEvent}
-              className="block rounded-xl bg-[#38bdf8] px-7 py-3 text-[14px] font-semibold text-black shadow-[0_0_30px_rgba(56,189,248,0.35)] transition hover:bg-sky-300"
+            <NavCTAButton
+              onClick={() => openConvertIQForm("audit")}
+              variant="purple"
             >
-              Book Call
-            </a>
-          </MagneticButton>
+              Google/Meta Ads Audit ↓
+            </NavCTAButton>
+          </div>
         </nav>
 
         <div className="flex min-w-0 items-center gap-2 md:hidden">
@@ -332,35 +363,42 @@ export function Navbar() {
                     );
                   })}
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpen(false);
-                      window.dispatchEvent(
-                        new CustomEvent("open-convertiq-form", {
-                          detail: { type: "demo" },
-                        })
-                      );
-                    }}
-                    className="block w-full rounded-xl px-3 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
-                  >
-                    Free Website Demo
-                  </button>
+                  <div className="mt-3 grid gap-2 border-t border-white/10 pt-3">
+                    <a
+                      href={CALENDLY_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        setOpen(false);
+                        trackScheduleEvent();
+                      }}
+                      className="block w-full rounded-xl bg-[#38bdf8] px-4 py-3 text-center text-[13px] font-black text-black shadow-[0_0_24px_rgba(56,189,248,0.35)]"
+                    >
+                      Book Free Strategy Call ↗
+                    </a>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpen(false);
-                      window.dispatchEvent(
-                        new CustomEvent("open-convertiq-form", {
-                          detail: { type: "audit" },
-                        })
-                      );
-                    }}
-                    className="block w-full rounded-xl px-3 py-3 text-left text-sm font-bold text-white/90 hover:bg-white/10"
-                  >
-                    Free Google Ads Audit
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpen(false);
+                        openConvertIQForm("demo");
+                      }}
+                      className="block w-full rounded-xl bg-[#1600b8] px-4 py-3 text-center text-[13px] font-black text-white shadow-[0_0_24px_rgba(37,99,235,0.3)]"
+                    >
+                      Get Free Website Demo ↓
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOpen(false);
+                        openConvertIQForm("audit");
+                      }}
+                      className="block w-full rounded-xl bg-[#8b45d9] px-4 py-3 text-center text-[13px] font-black text-white shadow-[0_0_24px_rgba(168,85,247,0.3)]"
+                    >
+                      Google/Meta Ads Audit ↓
+                    </button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
