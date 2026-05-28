@@ -36,7 +36,6 @@ function trackScheduleEvent() {
   };
 
   window.fbq?.("track", "Schedule", customData, { eventID: id });
-
   void trackServerEvent("Schedule", id, customData);
 }
 
@@ -191,7 +190,7 @@ export function Navbar() {
   return (
     <header className="fixed left-0 top-0 z-[1000] w-full border-b border-white/10 bg-black/85 backdrop-blur-xl">
       <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-2 px-3 md:h-[88px] md:px-10">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex shrink-0 items-center">
           <motion.div
             className="relative"
             whileHover={{ scale: 1.05 }}
@@ -319,51 +318,73 @@ export function Navbar() {
             Home
           </a>
 
-          <div className="relative flex min-w-0 flex-1 justify-center">
-            <button
-              type="button"
-              onClick={() => setOpen((prev) => !prev)}
-              className="max-w-[128px] truncate rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
-            >
-              Navigation ↓
-            </button>
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            className="max-w-[140px] truncate rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2.5 text-[12px] font-semibold text-white shadow-[0_10px_35px_rgba(0,0,0,0.35)] backdrop-blur-xl"
+          >
+            Navigation ↓
+          </button>
 
-            <AnimatePresence>
-              {open && (
+          <a
+            href={CALENDLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={trackScheduleEvent}
+            className="shrink-0 rounded-xl bg-[#38bdf8] px-4 py-2.5 text-[12px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
+          >
+            Book
+          </a>
+
+          <AnimatePresence>
+            {open && (
+              <>
+                <motion.button
+                  type="button"
+                  aria-label="Close navigation"
+                  onClick={() => setOpen(false)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-[1001] bg-black/35 backdrop-blur-[2px]"
+                />
+
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                  initial={{ opacity: 0, y: 10, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.96 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.98 }}
                   transition={{ duration: 0.18 }}
-                  className="absolute left-1/2 top-full mt-3 max-h-[75vh] w-[calc(100vw-1.5rem)] max-w-[380px] -translate-x-1/2 overflow-y-auto rounded-2xl border border-white/10 bg-black/95 p-2 text-left shadow-[0_25px_90px_rgba(0,0,0,0.75)] backdrop-blur-2xl"
+                  className="fixed left-3 right-3 top-[88px] z-[1002] max-h-[calc(100svh-110px)] overflow-y-auto rounded-3xl border border-white/10 bg-black/95 p-3 text-left shadow-[0_25px_90px_rgba(0,0,0,0.85)] backdrop-blur-2xl"
                 >
-                  {items.map((item) => {
-                    const Icon = item.icon;
+                  <div className="grid gap-1">
+                    {items.map((item) => {
+                      const Icon = item.icon;
 
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpen(false)}
-                        className="group flex gap-3 rounded-xl px-3 py-3 text-white/90 hover:bg-white/10"
-                      >
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600/30 to-purple-600/30 text-purple-200 ring-1 ring-white/10">
-                          <Icon size={16} />
-                        </div>
-
-                        <div>
-                          <div className="text-sm font-bold text-white">
-                            {item.title}
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setOpen(false)}
+                          className="group flex gap-3 rounded-2xl px-3 py-3 text-white/90 hover:bg-white/10"
+                        >
+                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600/30 to-purple-600/30 text-purple-200 ring-1 ring-white/10">
+                            <Icon size={17} />
                           </div>
-                          <p className="mt-0.5 text-xs leading-4 text-white/55">
-                            {item.desc}
-                          </p>
-                        </div>
-                      </Link>
-                    );
-                  })}
 
-                  <div className="mt-3 grid gap-2 border-t border-white/10 pt-3">
+                          <div className="min-w-0">
+                            <div className="text-sm font-bold text-white">
+                              {item.title}
+                            </div>
+                            <p className="mt-0.5 line-clamp-2 text-xs leading-4 text-white/55">
+                              {item.desc}
+                            </p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  <div className="sticky bottom-0 mt-3 grid gap-2 border-t border-white/10 bg-black/95 pt-3">
                     <a
                       href={CALENDLY_URL}
                       target="_blank"
@@ -400,19 +421,9 @@ export function Navbar() {
                     </button>
                   </div>
                 </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <a
-            href={CALENDLY_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={trackScheduleEvent}
-            className="shrink-0 rounded-xl bg-[#38bdf8] px-3 py-2.5 text-[12px] font-semibold text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]"
-          >
-            Book
-          </a>
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </header>
