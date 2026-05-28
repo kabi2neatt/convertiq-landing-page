@@ -1,121 +1,236 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { CalendarDays, Mail, Phone } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CalendarDays, Mail, Phone, X, Sparkles, SearchCheck } from "lucide-react";
 
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
 
-export function Footer() {
-  return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-black px-5 py-10 text-white md:px-6 md:py-14">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.16),transparent_34%),radial-gradient(circle_at_80%_80%,rgba(168,85,247,0.14),transparent_32%)]" />
+const TYPEFORM_DEMO_ID = "01KSQJAJ1JXK6KVE158NNMTJ78";
+const TYPEFORM_AUDIT_ID = "01KSQJC2H74B0VEW8923KGJQZ0";
 
-      <div className="relative mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.1fr_0.9fr_0.9fr]">
-        <div>
+type ActiveForm = "demo" | "audit" | null;
+
+export function Footer() {
+  const [activeForm, setActiveForm] = useState<ActiveForm>(null);
+
+  useEffect(() => {
+    if (!document.querySelector("script[src='//embed.typeform.com/next/embed.js']")) {
+      const script = document.createElement("script");
+      script.src = "//embed.typeform.com/next/embed.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }, []);
+
+  return (
+    <>
+      <footer className="relative overflow-hidden border-t border-white/10 bg-black px-5 py-10 text-white md:px-6 md:py-14">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.16),transparent_34%),radial-gradient(circle_at_80%_80%,rgba(168,85,247,0.14),transparent_32%)]" />
+
+        <div className="relative mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.1fr_0.9fr_0.9fr]">
+          <div>
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+                rotate: [-1.5, 1.5, -1.5],
+                scale: [1, 1.035, 1],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="relative mb-5 flex h-24 w-24 items-center justify-center rounded-3xl bg-white p-3 shadow-[0_0_50px_rgba(56,189,248,0.24)]"
+            >
+              <motion.div
+                className="absolute inset-0 rounded-3xl border border-sky-300/30"
+                animate={{ scale: [1, 1.16, 1], opacity: [0.7, 0.15, 0.7] }}
+                transition={{ duration: 3.2, repeat: Infinity }}
+              />
+              <Image
+                src="/convertiqmedia.png"
+                alt="ConvertIQ Media"
+                width={180}
+                height={180}
+                className="relative z-10 h-full w-full object-contain"
+              />
+            </motion.div>
+
+            <h3 className="text-2xl font-black tracking-[-0.04em]">
+              ConvertIQ Media
+            </h3>
+            <p className="mt-3 max-w-md text-sm leading-7 text-white/60">
+              High-intent Google Ads, conversion-focused websites, and tracking
+              systems built for local service businesses.
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <motion.button
+                type="button"
+                onClick={() => setActiveForm("demo")}
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-sky-300/30 bg-sky-400/15 px-5 py-3 text-sm font-black text-sky-100 shadow-[0_0_30px_rgba(56,189,248,0.18)] transition hover:border-sky-300/60 hover:bg-sky-400/25"
+              >
+                <Sparkles size={17} />
+                Book Free Demo
+              </motion.button>
+
+              <motion.button
+                type="button"
+                onClick={() => setActiveForm("audit")}
+                whileHover={{ scale: 1.03, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-purple-300/30 bg-purple-400/15 px-5 py-3 text-sm font-black text-purple-100 shadow-[0_0_30px_rgba(168,85,247,0.16)] transition hover:border-purple-300/60 hover:bg-purple-400/25"
+              >
+                <SearchCheck size={17} />
+                Free Ads Audit
+              </motion.button>
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-4 text-sm font-black uppercase tracking-[0.22em] text-white/40">
+              Navigation
+            </div>
+
+            <div className="grid gap-3 text-sm font-semibold text-white/70">
+              <Link href="#home" className="transition hover:text-sky-300">
+                Home
+              </Link>
+              <Link href="#services" className="transition hover:text-sky-300">
+                Services
+              </Link>
+              <Link href="#case-study" className="transition hover:text-sky-300">
+                Case Study
+              </Link>
+              <Link href="#why-us" className="transition hover:text-sky-300">
+                Why Us
+              </Link>
+              <Link href="#projects" className="transition hover:text-sky-300">
+                Projects
+              </Link>
+              <Link href="#testimonials" className="transition hover:text-sky-300">
+                Testimonials
+              </Link>
+              <Link href="#contact" className="transition hover:text-sky-300">
+                Contact
+              </Link>
+              <Link href="/privacy-policy" className="transition hover:text-sky-300">
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-4 text-sm font-black uppercase tracking-[0.22em] text-white/40">
+              Contact
+            </div>
+
+            <div className="grid gap-3">
+              <motion.a
+                href="mailto:contact@convertiqmedia.info"
+                whileHover={{ x: 6 }}
+                className="flex items-center gap-3 break-words rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-sm font-semibold text-white/70 transition hover:border-sky-300/30 hover:text-sky-200"
+              >
+                <Mail size={17} className="shrink-0" />
+                <span className="break-all">contact@convertiqmedia.info</span>
+              </motion.a>
+
+              <motion.a
+                href="tel:+16477779147"
+                whileHover={{ x: 6 }}
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-sm font-semibold text-white/70 transition hover:border-sky-300/30 hover:text-sky-200"
+              >
+                <Phone size={17} />
+                647-777-9147
+              </motion.a>
+
+              <motion.a
+                href={CALENDLY_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ x: 6, scale: 1.02 }}
+                className="flex items-center gap-3 rounded-2xl border border-sky-300/20 bg-sky-400/10 p-3 text-sm font-bold text-sky-100 transition hover:border-sky-300/50 hover:bg-sky-400/20"
+              >
+                <CalendarDays size={17} />
+                Book a strategy call
+              </motion.a>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative mx-auto mt-10 max-w-7xl border-t border-white/10 pt-7 md:mt-12">
+          <div className="mx-auto mb-7 max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-2 shadow-[0_0_60px_rgba(56,189,248,0.10)] backdrop-blur-xl">
+            <Image
+              src="/payment-trust-banner.png"
+              alt="Secure payments accepted: Amex, JCB, Mastercard, Visa, and Interac"
+              width={1920}
+              height={768}
+              className="h-auto w-full rounded-2xl object-contain opacity-90"
+              priority={false}
+            />
+          </div>
+
+          <div className="flex flex-col justify-between gap-4 text-xs text-white/40 md:flex-row">
+            <span>
+              © {new Date().getFullYear()} ConvertIQ Media. All rights reserved.
+            </span>
+            <span>Built for calls, quote requests, and booked jobs.</span>
+          </div>
+        </div>
+      </footer>
+
+      <AnimatePresence>
+        {activeForm && (
           <motion.div
-            animate={{
-              y: [0, -10, 0],
-              rotate: [-1.5, 1.5, -1.5],
-              scale: [1, 1.035, 1],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="relative mb-5 flex h-24 w-24 items-center justify-center rounded-3xl bg-white p-3 shadow-[0_0_50px_rgba(56,189,248,0.24)]"
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 px-4 backdrop-blur-xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActiveForm(null)}
           >
             <motion.div
-              className="absolute inset-0 rounded-3xl border border-sky-300/30"
-              animate={{ scale: [1, 1.16, 1], opacity: [0.7, 0.15, 0.7] }}
-              transition={{ duration: 3.2, repeat: Infinity }}
-            />
-            <Image
-              src="/convertiqmedia.png"
-              alt="ConvertIQ Media"
-              width={180}
-              height={180}
-              className="relative z-10 h-full w-full object-contain"
-            />
+              initial={{ scale: 0.92, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.92, opacity: 0, y: 20 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative h-[82vh] w-full max-w-4xl overflow-hidden rounded-3xl border border-white/15 bg-black shadow-[0_0_80px_rgba(56,189,248,0.18)]"
+            >
+              <button
+                type="button"
+                onClick={() => setActiveForm(null)}
+                className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/20"
+                aria-label="Close form"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="h-full w-full">
+                {activeForm === "demo" && (
+                  <div
+                    key="demo-form"
+                    data-tf-live={TYPEFORM_DEMO_ID}
+                    className="h-full w-full"
+                  />
+                )}
+
+                {activeForm === "audit" && (
+                  <div
+                    key="audit-form"
+                    data-tf-live={TYPEFORM_AUDIT_ID}
+                    className="h-full w-full"
+                  />
+                )}
+              </div>
+            </motion.div>
           </motion.div>
-
-          <h3 className="text-2xl font-black tracking-[-0.04em]">
-            ConvertIQ Media
-          </h3>
-          <p className="mt-3 max-w-md text-sm leading-7 text-white/60">
-            High-intent Google Ads, conversion-focused websites, and tracking
-            systems built for local service businesses.
-          </p>
-        </div>
-
-        <div>
-          <div className="mb-4 text-sm font-black uppercase tracking-[0.22em] text-white/40">
-            Navigation
-          </div>
-
-          <div className="grid gap-3 text-sm font-semibold text-white/70">
-            <Link href="#home" className="transition hover:text-sky-300">
-              Home
-            </Link>
-            <Link href="#services" className="transition hover:text-sky-300">
-              Services
-            </Link>
-            <Link href="#case-study" className="transition hover:text-sky-300">
-              Case Study
-            </Link>
-            <Link href="#why-us" className="transition hover:text-sky-300">
-              Why Us
-            </Link>
-            <Link href="#contact" className="transition hover:text-sky-300">
-              Contact
-            </Link>
-          </div>
-        </div>
-
-        <div>
-          <div className="mb-4 text-sm font-black uppercase tracking-[0.22em] text-white/40">
-            Contact
-          </div>
-
-          <div className="grid gap-3">
-            <motion.a
-              href="mailto:contact@convertiqmedia.info"
-              whileHover={{ x: 6 }}
-              className="flex items-center gap-3 break-words rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-sm font-semibold text-white/70 transition hover:border-sky-300/30 hover:text-sky-200"
-            >
-              <Mail size={17} className="shrink-0" />
-              <span className="break-all">contact@convertiqmedia.info</span>
-            </motion.a>
-
-            <motion.a
-              href="tel:+16477779147"
-              whileHover={{ x: 6 }}
-              className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-sm font-semibold text-white/70 transition hover:border-sky-300/30 hover:text-sky-200"
-            >
-              <Phone size={17} />
-              647-777-9147
-            </motion.a>
-
-            <motion.a
-              href={CALENDLY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ x: 6, scale: 1.02 }}
-              className="flex items-center gap-3 rounded-2xl border border-sky-300/20 bg-sky-400/10 p-3 text-sm font-bold text-sky-100 transition hover:border-sky-300/50 hover:bg-sky-400/20"
-            >
-              <CalendarDays size={17} />
-              Book a strategy call
-            </motion.a>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative mx-auto mt-10 flex max-w-7xl flex-col justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:mt-12 md:flex-row">
-        <span>© {new Date().getFullYear()} ConvertIQ Media. All rights reserved.</span>
-        <span>Built for calls, quote requests, and booked jobs.</span>
-      </div>
-    </footer>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
