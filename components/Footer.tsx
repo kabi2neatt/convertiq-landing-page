@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { CalendarDays, Mail, Phone, X, Sparkles, SearchCheck } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  CalendarDays,
+  Mail,
+  Phone,
+  SearchCheck,
+  Sparkles,
+  X,
+} from "lucide-react";
 
 const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
 
@@ -17,7 +24,11 @@ export function Footer() {
   const [activeForm, setActiveForm] = useState<ActiveForm>(null);
 
   useEffect(() => {
-    if (!document.querySelector("script[src='//embed.typeform.com/next/embed.js']")) {
+    const existingScript = document.querySelector(
+      "script[src='//embed.typeform.com/next/embed.js']"
+    );
+
+    if (!existingScript) {
       const script = document.createElement("script");
       script.src = "//embed.typeform.com/next/embed.js";
       script.async = true;
@@ -30,7 +41,7 @@ export function Footer() {
       <footer className="relative overflow-hidden border-t border-white/10 bg-black px-5 py-10 text-white md:px-6 md:py-14">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(56,189,248,0.16),transparent_34%),radial-gradient(circle_at_80%_80%,rgba(168,85,247,0.14),transparent_32%)]" />
 
-        <div className="relative mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.1fr_0.9fr_0.9fr]">
+        <div className="relative mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.1fr_0.9fr_1.15fr]">
           <div>
             <motion.div
               animate={{
@@ -47,9 +58,17 @@ export function Footer() {
             >
               <motion.div
                 className="absolute inset-0 rounded-3xl border border-sky-300/30"
-                animate={{ scale: [1, 1.16, 1], opacity: [0.7, 0.15, 0.7] }}
-                transition={{ duration: 3.2, repeat: Infinity }}
+                animate={{
+                  scale: [1, 1.16, 1],
+                  opacity: [0.7, 0.15, 0.7],
+                }}
+                transition={{
+                  duration: 3.2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               />
+
               <Image
                 src="/convertiqmedia.png"
                 alt="ConvertIQ Media"
@@ -62,6 +81,7 @@ export function Footer() {
             <h3 className="text-2xl font-black tracking-[-0.04em]">
               ConvertIQ Media
             </h3>
+
             <p className="mt-3 max-w-md text-sm leading-7 text-white/60">
               High-intent Google Ads, conversion-focused websites, and tracking
               systems built for local service businesses.
@@ -104,7 +124,10 @@ export function Footer() {
               <Link href="#services" className="transition hover:text-sky-300">
                 Services
               </Link>
-              <Link href="#case-study" className="transition hover:text-sky-300">
+              <Link
+                href="#case-study"
+                className="transition hover:text-sky-300"
+              >
                 Case Study
               </Link>
               <Link href="#why-us" className="transition hover:text-sky-300">
@@ -113,13 +136,19 @@ export function Footer() {
               <Link href="#projects" className="transition hover:text-sky-300">
                 Projects
               </Link>
-              <Link href="#testimonials" className="transition hover:text-sky-300">
+              <Link
+                href="#testimonials"
+                className="transition hover:text-sky-300"
+              >
                 Testimonials
               </Link>
               <Link href="#contact" className="transition hover:text-sky-300">
                 Contact
               </Link>
-              <Link href="/privacy-policy" className="transition hover:text-sky-300">
+              <Link
+                href="/privacy-policy"
+                className="transition hover:text-sky-300"
+              >
                 Privacy Policy
               </Link>
             </div>
@@ -145,8 +174,8 @@ export function Footer() {
                 whileHover={{ x: 6 }}
                 className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-sm font-semibold text-white/70 transition hover:border-sky-300/30 hover:text-sky-200"
               >
-                <Phone size={17} />
-                647-777-9147
+                <Phone size={17} className="shrink-0" />
+                <span>647-777-9147</span>
               </motion.a>
 
               <motion.a
@@ -156,31 +185,28 @@ export function Footer() {
                 whileHover={{ x: 6, scale: 1.02 }}
                 className="flex items-center gap-3 rounded-2xl border border-sky-300/20 bg-sky-400/10 p-3 text-sm font-bold text-sky-100 transition hover:border-sky-300/50 hover:bg-sky-400/20"
               >
-                <CalendarDays size={17} />
-                Book a strategy call
+                <CalendarDays size={17} className="shrink-0" />
+                <span>Book a strategy call</span>
               </motion.a>
+            </div>
+
+            <div className="mt-5">
+              <Image
+                src="/payment-trust-banner.png"
+                alt="Secure payments accepted: Amex, JCB, Mastercard, Visa, and Interac"
+                width={1200}
+                height={480}
+                className="w-full max-w-[430px] rounded-2xl object-contain opacity-90 shadow-[0_0_45px_rgba(56,189,248,0.12)]"
+              />
             </div>
           </div>
         </div>
 
-        <div className="relative mx-auto mt-10 max-w-7xl border-t border-white/10 pt-7 md:mt-12">
-          <div className="mx-auto mb-7 max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-2 shadow-[0_0_60px_rgba(56,189,248,0.10)] backdrop-blur-xl">
-            <Image
-              src="/payment-trust-banner.png"
-              alt="Secure payments accepted: Amex, JCB, Mastercard, Visa, and Interac"
-              width={1920}
-              height={768}
-              className="h-auto w-full rounded-2xl object-contain opacity-90"
-              priority={false}
-            />
-          </div>
-
-          <div className="flex flex-col justify-between gap-4 text-xs text-white/40 md:flex-row">
-            <span>
-              © {new Date().getFullYear()} ConvertIQ Media. All rights reserved.
-            </span>
-            <span>Built for calls, quote requests, and booked jobs.</span>
-          </div>
+        <div className="relative mx-auto mt-10 flex max-w-7xl flex-col justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/40 md:mt-12 md:flex-row">
+          <span>
+            © {new Date().getFullYear()} ConvertIQ Media. All rights reserved.
+          </span>
+          <span>Built for calls, quote requests, and booked jobs.</span>
         </div>
       </footer>
 
