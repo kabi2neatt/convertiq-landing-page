@@ -221,7 +221,7 @@ function CalendlyEmbed() {
   return (
     <div
       className="calendly-inline-widget h-[700px] min-w-[320px] bg-[#111827] md:h-[760px]"
-      data-url="https://calendly.com/d/cvx7-fwc-j7k?hide_gdpr_banner=1&background_color=111827&text_color=535353"
+      data-url="https://calendly.com/d/cvx7-fwc-j7k?hide_gdpr_banner=1&background_color=111827&text_color=CBD5E1"
     />
   );
 }
