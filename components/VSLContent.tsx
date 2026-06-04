@@ -27,7 +27,6 @@ declare global {
 }
 
 const META_PIXEL_ID = "1727624242014302";
-const CALENDLY_URL = "https://calendly.com/kabir-convertiq-media/30min";
 
 function loadMetaPixel() {
   if (typeof window === "undefined") return;
@@ -41,11 +40,8 @@ function loadMetaPixel() {
   };
 
   const fbq = function (...args: unknown[]) {
-    if (fbq.callMethod) {
-      fbq.callMethod(...args);
-    } else {
-      fbq.queue.push(args);
-    }
+    if (fbq.callMethod) fbq.callMethod(...args);
+    else fbq.queue.push(args);
   } as FbqFunction;
 
   fbq.queue = [];
@@ -71,7 +67,6 @@ function trackMetaEvent(
   if (typeof window === "undefined") return;
 
   const id = eventId(eventName);
-
   window.fbq?.("track", eventName, customData || {}, { eventID: id });
   void trackServerEvent(eventName, id, customData);
 }
@@ -84,18 +79,18 @@ const trustPoints = [
 ];
 
 const callBenefits = [
-  "Review your Google Ads and Meta Ads setup",
-  "Find what is wasting budget",
-  "Review your landing page and offer",
-  "Identify lead quality improvements",
-  "Leave with clear next steps",
+  "Answer a few quick qualification questions first",
+  "Review your ads, funnel, landing page, offer, and tracking",
+  "Identify what is working, what is not, and what to fix",
+  "Get custom growth recommendations for your business",
+  "Book instantly if your business is the right fit",
 ];
 
 const problems = [
   {
     icon: MousePointerClick,
     title: "Meta Lead Forms Generate Junk Leads",
-    text: "Instant forms are easy to submit because Meta pre-fills the user's information. That usually means more tire-kickers, low intent prospects, and people who forget they even filled it out.",
+    text: "Instant forms are easy to submit because Meta pre-fills the user's information. That usually means more tire-kickers, low-intent prospects, and people who forget they even filled it out.",
   },
   {
     icon: Target,
@@ -183,6 +178,7 @@ function PageScrollBar() {
 }
 
 function CalendlyEmbed() {
+  const hasTrackedLead = useRef(false);
   const hasTrackedSchedule = useRef(false);
 
   useEffect(() => {
@@ -199,12 +195,18 @@ function CalendlyEmbed() {
 
     const onMessage = (event: MessageEvent) => {
       const data = event.data as { event?: string } | undefined;
-
       if (!data?.event?.startsWith("calendly.")) return;
+
+      if (data.event === "calendly.routing_form_submission" && !hasTrackedLead.current) {
+        hasTrackedLead.current = true;
+        trackMetaEvent("Lead", {
+          content_name: "ConvertIQ Routing Form Submission",
+          funnel_step: "calendly_routing_form_submitted",
+        });
+      }
 
       if (data.event === "calendly.event_scheduled" && !hasTrackedSchedule.current) {
         hasTrackedSchedule.current = true;
-
         trackMetaEvent("Schedule", {
           content_name: "ConvertIQ Google Meta Ads Discovery Call",
           funnel_step: "calendly_booked",
@@ -218,8 +220,8 @@ function CalendlyEmbed() {
 
   return (
     <div
-      className="calendly-inline-widget h-[690px] min-w-[320px] bg-white md:h-[760px]"
-      data-url={`${CALENDLY_URL}?hide_gdpr_banner=1&primary_color=38bdf8`}
+      className="calendly-inline-widget h-[700px] min-w-[320px] bg-[#111827] md:h-[760px]"
+      data-url="https://calendly.com/d/cvx7-fwc-j7k?hide_gdpr_banner=1&background_color=111827&text_color=ffffff"
     />
   );
 }
@@ -250,33 +252,33 @@ function Hero() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-3xl text-sm font-medium leading-7 text-white/72 sm:text-base md:text-lg md:leading-8">
-            Stop chasing low-quality Meta lead form submissions. Book a call and we’ll review your ads, landing page, offer, and tracking to see how you can generate better qualified leads.
+            Stop chasing low-quality Meta lead form submissions. Answer a few quick qualification questions, then book a call to review your ads, landing page, offer, and tracking.
           </p>
         </FadeUp>
 
         <FadeUp delay={0.12} className="mx-auto mt-10 max-w-6xl">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-2 shadow-[0_35px_140px_rgba(59,130,246,0.22)] backdrop-blur-xl md:rounded-[2.4rem] md:p-3">
-            <div className="pointer-events-none absolute -inset-16 bg-[radial-gradient(circle_at_22%_12%,rgba(56,189,248,0.22),transparent_38%),radial-gradient(circle_at_88%_78%,rgba(168,85,247,0.2),transparent_42%)]" />
+          <div className="relative overflow-hidden rounded-[2rem] border border-sky-400/25 bg-gradient-to-br from-blue-500/[0.12] via-white/[0.035] to-purple-500/[0.12] p-2 shadow-[0_35px_140px_rgba(59,130,246,0.25)] backdrop-blur-xl md:rounded-[2.4rem] md:p-3">
+            <div className="pointer-events-none absolute -inset-16 bg-[radial-gradient(circle_at_22%_12%,rgba(56,189,248,0.2),transparent_38%),radial-gradient(circle_at_88%_78%,rgba(168,85,247,0.2),transparent_42%)]" />
 
             <div className="relative grid overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/35 lg:grid-cols-[390px_1fr] md:rounded-[2rem]">
-              <div className="relative overflow-hidden border-b border-white/10 p-6 text-left lg:border-b-0 lg:border-r md:p-8">
+              <div className="relative overflow-hidden border-b border-white/10 p-6 text-left lg:border-b-0 lg:border-r lg:border-white/10 md:p-8">
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(56,189,248,0.13),transparent_42%),radial-gradient(circle_at_100%_100%,rgba(168,85,247,0.14),transparent_42%)]" />
 
                 <div className="relative">
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-400/15 text-sky-200 ring-1 ring-sky-300/15">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-500/20 text-purple-200 ring-1 ring-purple-300/25">
                     <CalendarDays size={25} />
                   </div>
 
                   <div className="text-[10px] font-black uppercase tracking-[0.25em] text-sky-200/70">
-                    30-minute call
+                    Qualification + booking
                   </div>
 
                   <h2 className="mt-3 text-3xl font-black leading-[0.95] tracking-[-0.055em] text-white md:text-4xl">
-                    Free Ads Discovery Call
+                    Free Google/Meta Ads Discovery Call
                   </h2>
 
                   <p className="mt-4 text-sm leading-7 text-white/65">
-                    Pick a time directly on the calendar. No instant form, no back-and-forth, no pressure.
+                    Complete the short form first. If your business is a fit, you’ll immediately see available times to book.
                   </p>
 
                   <div className="mt-6 grid gap-3">
@@ -304,7 +306,7 @@ function Hero() {
                 </div>
               </div>
 
-              <div className="bg-white">
+              <div className="bg-[#111827]">
                 <CalendlyEmbed />
               </div>
             </div>
@@ -355,7 +357,7 @@ function ProblemSection() {
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/65 md:text-base md:leading-8">
-            A landing page creates more intent before someone books with you, which helps filter out junk leads and improves call quality.
+            A qualification-first landing page creates more intent before someone books with you, which helps filter out junk leads and improves call quality.
           </p>
         </FadeUp>
 
@@ -434,18 +436,18 @@ function ProcessSection() {
   const steps = [
     {
       icon: CalendarDays,
-      title: "Book your discovery call",
-      text: "Choose a time that works for you directly through Calendly.",
+      title: "Complete the qualification form",
+      text: "Answer a few quick questions so we know what type of business you run and where your revenue is at.",
     },
     {
       icon: BarChart3,
-      title: "We review your current setup",
-      text: "We look at your ads, funnel, landing page, tracking, and offer.",
+      title: "Book your discovery call",
+      text: "If your business is a fit, Calendly will automatically show available times to book.",
     },
     {
       icon: TrendingUp,
-      title: "You leave with clear next steps",
-      text: "You’ll know what to fix, what to test, and whether working together makes sense.",
+      title: "Get clear next steps",
+      text: "We review your ads, funnel, landing page, tracking, and growth opportunities on the call.",
     },
   ];
 
@@ -572,7 +574,7 @@ function FinalCTA() {
         </h2>
 
         <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-white/70 md:text-lg md:leading-8">
-          Go back to the calendar, pick a time, and book your free Google/Meta Ads discovery call.
+          Go back to the qualification form, answer a few quick questions, and book your free Google/Meta Ads discovery call.
         </p>
 
         <a
@@ -580,7 +582,7 @@ function FinalCTA() {
           className="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-[#38bdf8] px-7 py-4 text-sm font-black text-black shadow-[0_0_45px_rgba(56,189,248,0.45)] transition hover:bg-[#7dd3fc]"
         >
           <CalendarDays size={18} />
-          Go to calendar
+          Go to form
         </a>
 
         <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11.5px] font-semibold text-white/60 md:text-xs">
@@ -612,7 +614,7 @@ function StickyMobileCTA() {
       className="fixed inset-x-0 bottom-0 z-[70] border-t border-white/10 bg-black/78 px-4 pb-[calc(env(safe-area-inset-bottom)+12px)] pt-3 shadow-[0_-20px_60px_rgba(59,130,246,0.18)] backdrop-blur-xl md:hidden"
     >
       <div className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#38bdf8] px-5 py-4 text-[13px] font-black text-black shadow-[0_0_35px_rgba(56,189,248,0.45)]">
-        Book Free Discovery Call
+        Start Qualification Form
         <CalendarDays size={17} />
       </div>
     </motion.a>
@@ -624,7 +626,7 @@ export function VSLContent() {
     loadMetaPixel();
 
     trackMetaEvent("ViewContent", {
-      content_name: "ConvertIQ Google Meta Ads Discovery Call Landing Page",
+      content_name: "ConvertIQ Google Meta Ads Discovery Call Routing Form Landing Page",
       funnel_step: "landing_page_view",
     });
   }, []);
